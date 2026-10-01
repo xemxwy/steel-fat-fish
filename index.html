@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>钢铁大肥鱼：潮汐与阵线</title>
+<style>
+:root{--bg:#101921;--panel:#182630;--panel2:#203542;--line:#36505c;--ink:#e8f1ee;--muted:#a8bab8;--cyan:#64d9e7;--blue:#389bc8;--gold:#f0c76c;--red:#ed7778;--green:#83d7a4;--purple:#c19af2}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#234558 0,#101921 55%);color:var(--ink);font:15px/1.5 system-ui,"Microsoft YaHei",sans-serif}button{font:inherit;color:inherit}.shell{max-width:1440px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.brand{display:flex;gap:13px;align-items:center}.fish{font-size:38px;filter:drop-shadow(0 3px 8px #0008)}h1{font-size:21px;letter-spacing:.08em;margin:0}.sub{color:var(--muted);font-size:12px}.turn{border:1px solid var(--line);background:#13232c;padding:8px 14px;border-radius:6px;color:var(--gold);font-weight:700}.meters{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}.meter{background:linear-gradient(145deg,#1b2b35,#15232b);border:1px solid var(--line);padding:11px 13px;border-radius:7px}.meterhead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.meter strong{font-size:20px;color:var(--ink)}.bar{height:5px;background:#0d171d;border-radius:5px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;border-radius:5px;transition:width .35s}.grid{display:grid;grid-template-columns:minmax(520px,1.45fr) minmax(310px,.8fr);gap:14px}.panel{background:linear-gradient(160deg,#1a2a34,#16232c);border:1px solid var(--line);border-radius:8px;overflow:hidden}.ph{padding:12px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.ph h2{font-size:14px;letter-spacing:.12em;margin:0}.ph small{color:var(--muted)}.tree{padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.lane{border:0;border-radius:0;background:transparent;padding:6px 10px}.lanehead{display:flex;justify-content:space-between;align-items:center;margin:1px 2px 10px;padding-bottom:7px;border-bottom:1px solid #304852;font-weight:800;font-size:13px}.lanehead span:last-child{font-size:10px;color:var(--muted);font-weight:500}.node{width:100%;min-height:76px;text-align:left;margin:0 0 8px;padding:9px 10px;background:#1d303a;border:1px solid #38535e;border-radius:6px;cursor:pointer;transition:.15s}.node:hover:not(:disabled){transform:translateY(-1px);border-color:var(--cyan);background:#243c47}.node:disabled{cursor:default;opacity:.44}.node.done{border-color:#579d83;background:#19372f;opacity:.83}.node.selected{outline:2px solid var(--gold)}.node b{display:block;font-size:12px;margin-bottom:3px}.node small{font-size:10px;color:var(--muted);line-height:1.35;display:block}.node .cost{color:var(--gold);font-size:10px;margin-top:5px}.connector{height:8px;border-left:1px solid #46606b;margin:-8px 0 0 18px}.side{display:flex;flex-direction:column;gap:14px}.map{height:167px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 28% 48%,#276278 0 10%,transparent 10.4%),radial-gradient(ellipse at 58% 45%,#244f60 0 13%,transparent 13.4%),radial-gradient(ellipse at 79% 64%,#305e65 0 8%,transparent 8.4%),linear-gradient(135deg,#10212a,#183743 50%,#101f27)}.map:before{content:"";position:absolute;inset:-50%;opacity:.16;background:repeating-radial-gradient(ellipse at 50% 50%,transparent 0 29px,#9ec6bf 30px 31px,transparent 32px 57px);transform:rotate(-16deg)}.maplabel{position:absolute;z-index:1;font-size:10px;letter-spacing:.18em;color:#a9d1ce;text-shadow:0 1px 4px #000}.maplabel.a{left:18%;top:38%}.maplabel.b{right:17%;top:52%;color:#f19c89}.maplabel.c{left:42%;bottom:13%}.wave{position:absolute;z-index:1;left:48%;top:34%;font-size:30px;transition:.25s}.alert{position:absolute;z-index:1;right:13px;top:12px;border:1px solid #c66c65;background:#482f31cc;padding:4px 8px;border-radius:4px;font-size:10px;color:#ffc5b9}.eventbody,.logbody{padding:14px}.eventtitle{font-size:16px;font-weight:800;margin:2px 0 7px}.eventtext{font-size:12px;color:#c4d1cf;margin:0 0 12px;min-height:44px}.choices{display:grid;gap:7px}.choice{border:1px solid #3a5661;background:#20343e;border-radius:5px;text-align:left;padding:9px 10px;cursor:pointer;font-size:12px}.choice:hover{border-color:var(--cyan)}.choice:disabled{opacity:.58;cursor:default}.choice span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.choice.picked{border-color:var(--green);background:#1d3d37}.actions{padding:0 14px 14px}.mainbtn{width:100%;border:1px solid #72ced1;background:linear-gradient(90deg,#287b91,#286d82);padding:10px;border-radius:5px;font-weight:800;letter-spacing:.08em;cursor:pointer}.mainbtn:disabled{opacity:.45;cursor:default}.logbody{max-height:190px;overflow:auto}.logline{font-size:11px;color:#b5c7c4;border-left:2px solid #426775;padding:4px 0 4px 9px;margin-bottom:7px}.logline em{color:var(--gold);font-style:normal}.footer{text-align:center;color:#7f999a;font-size:10px;padding:14px}.overlay{position:fixed;inset:0;background:#061016d9;display:none;place-items:center;padding:20px;z-index:5}.overlay.show{display:grid}.result{max-width:550px;width:100%;text-align:center;background:#1a2b35;border:1px solid #6c9e9e;border-radius:10px;padding:28px;box-shadow:0 20px 70px #0009}.result .big{font-size:52px}.result h2{margin:5px 0 10px;color:var(--gold)}.result p{color:#c2d0cd}.result button{margin-top:12px;padding:9px 20px;background:#266b7c;border:1px solid var(--cyan);border-radius:5px;cursor:pointer}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.meters{grid-template-columns:repeat(3,1fr)}.tree{padding:10px}}@media(max-width:560px){.shell{padding:10px}.top{align-items:flex-start}.meters{grid-template-columns:repeat(2,1fr)}.meter:last-child{grid-column:span 2}.tree{grid-template-columns:1fr;gap:9px}.lane{display:grid;grid-template-columns:1fr 1fr;gap:7px}.lanehead{grid-column:span 2;margin:0 0 3px}.node{margin:0;min-height:79px}.connector{display:none}h1{font-size:17px}.map{height:135px}}
+.meter.occupation{grid-column:1/-1;border-color:#b95651;background:linear-gradient(100deg,#49292c,#211c23);padding:13px 16px}.meter.occupation .meterhead{color:#f4b4a0}.meter.occupation strong{color:#ffd37f;font-size:30px}.meter.occupation .bar{height:11px;background:#1a1215}.meter.occupation .bar i{background:linear-gradient(90deg,#d34d4d,#f2b953)!important}.turn{border-color:#a54a47;color:#ffd37f}.branchrow{display:grid;grid-template-columns:1fr 1fr;gap:7px;position:relative;padding-top:8px}.branchrow:before{content:'互斥路线 · 二选一';position:absolute;top:-2px;left:0;right:0;text-align:center;font-size:9px;color:#d2b77b;letter-spacing:.1em}.branchrow .node{min-height:118px}.lane:has(.branchrow) .branchrow+.connector{margin-top:0}@media(max-width:560px){.branchrow{grid-template-columns:1fr}.branchrow .node{min-height:80px}}@media(max-width:720px){.tabs{grid-template-columns:repeat(3,1fr)}.battlegrid{grid-template-columns:1fr}.matchup{grid-template-columns:1fr auto 1fr}}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 14px}.tab{border:1px solid var(--line);background:#162630;color:var(--muted);padding:9px;border-radius:5px;cursor:pointer;font-weight:700;letter-spacing:.08em}.tab.active{color:#ffe0a0;border-color:#b95651;background:linear-gradient(100deg,#47282b,#2a2428)}.grid.one-column{grid-template-columns:1fr}.battlepanel{display:none}.battlecontent{padding:16px}.battlegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.matchup{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:15px;background:#14232b;border:1px solid var(--line);border-radius:7px}.matchup span{display:block;color:var(--muted);font-size:11px}.matchup b{font-size:24px}.matchup .bar{margin-top:7px}.versus{font-size:10px;color:#e3887b;font-weight:900;letter-spacing:.15em}.forecast{margin-top:14px;padding:16px;border:1px solid #9b6655;background:linear-gradient(100deg,#3a292c,#23232b);border-radius:7px}.forecast span{color:#f2b7a3}.forecast strong{float:right;font-size:20px;color:#ffd37f}.forecast small{display:block;color:var(--muted);font-size:11px;margin-top:8px;clear:both}@media(max-width:560px){.branchrow{grid-template-columns:1fr}.branchrow .node{min-height:80px}} .tensionbadge{margin-bottom:12px;padding:10px 13px;border-left:3px solid #ed7778;background:#30262a;color:#eeb7a9;font-size:12px}.tensionbadge strong{float:right;color:#ffd37f;font-size:17px}.decision-overlay{position:fixed;inset:0;background:#061016e8;display:none;place-items:center;padding:18px;z-index:8}.decision-overlay.show{display:grid}.decision-box{width:min(560px,100%);background:linear-gradient(155deg,#1c303a,#14232c);border:1px solid #9b8050;border-radius:9px;box-shadow:0 20px 70px #000b;overflow:hidden}.decision-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.decision-head h2{font-size:15px;margin:0;color:#ffe0a0}.decision-content{padding:18px}.decision-copy{font-size:14px;color:#e4ece8;line-height:1.7;margin:0 0 16px;white-space:pre-wrap}.decision-effects{border:1px solid #38515a;background:#13232b;border-radius:6px;padding:12px}.decision-effects b{font-size:11px;color:var(--muted);letter-spacing:.08em}.decision-effects ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.decision-effects li{font-size:12px;color:#f0d28c}.decision-actions{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 18px}.decision-actions button{min-width:100px;padding:9px 14px;border-radius:5px;cursor:pointer;font-weight:800}.deferbtn{background:#1a2b34;border:1px solid #55707b;color:#d3dedb}.resolvebtn{background:linear-gradient(90deg,#287b91,#286d82);border:1px solid #72ced1;color:white}@media(max-width:560px){.decision-content{padding:14px}.decision-actions{padding:0 14px 14px}.decision-actions button{flex:1}}
+.credits-link{background:none;border:0;color:#9fb9ba;font:inherit;font-size:10px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0 2px}.credits-link:hover{color:#ffe0a0}
+#creditsOverlay .focus-box{width:min(660px,100%)}
+#creditsOverlay{position:fixed;inset:0;background:#061016e8;display:none;place-items:center;padding:18px;z-index:10}#creditsOverlay.show{display:grid}
+.credits-body{padding:18px;font-size:12.5px;line-height:1.8;color:#d7e2df}.credits-body h3{font-size:12px;color:#ffe0a0;letter-spacing:.08em;margin:16px 0 7px;padding-bottom:5px;border-bottom:1px solid #33505a}.credits-body h3:first-child{margin-top:0}.credits-body ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}.credits-body li{border-left:2px solid #3d6270;padding-left:10px}.credits-body b{color:#eef5f2}.credits-body em{color:#9fb9ba;font-style:normal}.credits-body a{color:#7fd6e4;word-break:break-all}.credits-warn{border-left-color:#c9705f!important;background:#2c2124;padding:9px 11px;border-radius:0 5px 5px 0}.credits-note{font-size:11.5px;color:#a8bab8;margin-top:14px;padding-top:11px;border-top:1px solid #2b4048}
+</style>
+
+<style>
+.tree{display:block;max-height:calc(100vh - 330px);min-height:320px;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-color:#587783 #13212a;scrollbar-width:auto;padding:18px 14px}.tree::-webkit-scrollbar{width:10px;height:10px}.tree::-webkit-scrollbar-track{background:#13212a}.tree::-webkit-scrollbar-thumb{background:#587783;border:2px solid #13212a;border-radius:8px}.tree::-webkit-scrollbar-thumb:hover{background:#78a0aa}.focus-graph{position:relative;display:grid;grid-template-columns:minmax(220px,2fr) minmax(130px,1fr) minmax(220px,2fr) minmax(130px,1fr) minmax(220px,2fr);grid-auto-rows:minmax(62px,auto);column-gap:12px;row-gap:18px;min-width:1080px;padding:8px 8px 22px}.routehead{position:relative;z-index:1;text-align:center;font-weight:900;font-size:14px;letter-spacing:.12em;padding:4px 0;border-bottom:2px solid currentColor}.focus-branch-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}.focus-branch-pair .node{min-height:100%;padding:9px 6px;font-size:12px}.war-gate{position:relative;z-index:1;align-self:center;display:flex;align-items:center;justify-content:center;gap:18px;padding:11px 16px;border:1px solid #b95651;border-left:4px solid #e36b6b;border-radius:6px;background:linear-gradient(90deg,#3b292c,#202832);color:#ffd1bd}.war-gate b{font-size:14px;letter-spacing:.12em}.war-gate span{font-size:11px;color:#ddb5a9}.phase-gate{position:relative;z-index:1;align-self:center;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 16px;border:1px solid #8a7548;border-left:4px solid #efc45e;border-radius:6px;background:linear-gradient(90deg,#332f25,#202832);color:#ffe3a4}.phase-gate b{font-size:14px;letter-spacing:.08em}.phase-gate span{font-size:11px;color:#d4c49b}.focus-links{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}.focus-links path{fill:none;stroke:var(--path-color,#667b83);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.82}.focus-links path.ready{stroke:#e7c46b;stroke-width:2.5;opacity:1}.lane{position:relative;z-index:1;padding:5px 8px 8px}.shared-lane{grid-column:1/-1}.shared-lane .lane-nodes{align-items:center}.shared-lane .node{width:min(360px,100%)}.lanehead{margin-bottom:14px}.lane-nodes{display:flex;flex-direction:column;gap:13px}.node{position:relative;z-index:1;min-height:50px;margin:0;padding:10px 12px;text-align:center;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#203642,#172932);border-color:var(--node-color,#49616a);box-shadow:0 4px 10px #0003}.node b{font-size:13px;margin:0;line-height:1.35}.node.mother-focus{justify-self:center;width:min(360px,80%)}.node.done{border-color:#579d83;background:linear-gradient(135deg,#1c493d,#19372f);opacity:1}.node.selected{outline:2px solid var(--gold)}.node.locked{opacity:.5;border-style:dashed}.node.available{border-color:var(--node-color,#66aeb1)}.branchrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:12px}.branchrow:before{top:-1px}.branchrow .node{min-height:58px}.focus-overlay{position:fixed;inset:0;background:#061016e8;display:none;place-items:center;padding:18px;z-index:9}.focus-overlay.show{display:grid}.focus-box{width:min(620px,100%);max-height:90vh;overflow:auto;background:linear-gradient(155deg,#1c303a,#14232c);border:1px solid #9b8050;border-radius:9px;box-shadow:0 20px 70px #000b}.focus-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.focus-head h2{font-size:16px;margin:0;color:#ffe0a0}.focus-body{padding:18px}.focus-desc{font-size:14px;line-height:1.75;color:#e4ece8;white-space:pre-wrap;margin:0 0 15px}.focus-meta{display:grid;gap:10px}.focus-meta section{border:1px solid #38515a;background:#13232b;border-radius:6px;padding:12px}.focus-meta b{font-size:11px;color:var(--muted);letter-spacing:.08em}.focus-meta ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.focus-meta li{font-size:12px;color:#f0d28c}.focus-status{font-size:12px;color:#e5bd72;margin-top:12px}.focus-actions{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 18px}.focus-actions button{min-width:110px;padding:9px 14px;border-radius:5px;cursor:pointer;font-weight:800}.focus-close{background:#1a2b34;border:1px solid #55707b;color:#d3dedb}.focus-start{background:linear-gradient(90deg,#287b91,#286d82);border:1px solid #72ced1;color:white}.focus-start:disabled{opacity:.45;cursor:default}
+@media(max-width:560px){.tree{max-height:calc(100vh - 250px);min-height:250px;padding:12px 8px}.focus-graph{min-width:1080px}.focus-branch-pair{gap:5px}.focus-branch-pair .node{font-size:11px}.war-gate{gap:8px;flex-wrap:wrap}.focus-actions{padding:0 14px 14px}.focus-body{padding:14px}}@media(max-height:720px){.tree{max-height:calc(100vh - 235px);min-height:230px}}
+</style>
+<style>.focus-graph [data-focus="p3cover"]{width:84%;justify-self:center}</style><style>.battle-effects{margin-top:14px;padding:14px 16px;border:1px solid #46616c;background:#14232b;border-radius:7px}.effects-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.effects-head h3{margin:0;color:#d9e6df;font-size:13px;letter-spacing:.08em}.effects-head small{color:var(--muted);font-size:10px}.battle-effects ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}.battle-effects li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 10px;border-left:2px solid #8eb7a2;background:#1b2d35;border-radius:3px;font-size:12px;color:#e6ece6}.battle-effects li b{flex:none;color:#f2ce82;font-size:11px}.battle-effects p{margin:0;color:var(--muted);font-size:11px}</style><style>.musicbar{display:flex;align-items:center;gap:12px;margin:10px 0 14px;padding:9px 12px;border:1px solid #304954;border-radius:6px;background:#13232b;color:#d8e4df;font-size:12px}.music-toggle{border:1px solid #568391;border-radius:5px;background:#1d3c48;color:#e8f4ee;padding:7px 12px;font-weight:800;cursor:pointer}.music-label{flex:1;min-width:0;color:#c1d0cb}.music-volume{display:flex;align-items:center;gap:7px;color:#a8bdba}.music-volume input{width:92px;accent-color:#75c9e5}@media(max-width:560px){.musicbar{flex-wrap:wrap}.music-label{flex-basis:calc(100% - 120px)}.music-volume{margin-left:auto}}</style></head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand"><span class="fish">🐟</span><div><h1>钢铁大肥鱼</h1><div class="sub">战略指挥部 · 舆论战争前线推演</div></div></div><div class="turn" id="turn">第 1 回合</div></header>
+<section class="meters" id="meters"></section><nav class="tabs"><button class="tab active" onclick="showPage('front')">战场总览</button><button class="tab" onclick="showPage('focus')">决议树</button><button class="tab" onclick="showPage('battle')">战况</button></nav><section class="musicbar" aria-label="背景音乐"><button type="button" class="music-toggle" id="musicToggle" onclick="toggleMusic()">♫ 开启配乐</button><span class="music-label" id="musicLabel">《Let Me Go》· 点击开启</span><label class="music-volume">音量 <input id="musicVolume" type="range" min="0" max="100" value="35" aria-label="背景音乐音量"></label></section>
+<div class="grid"><main class="panel" id="focusPanel"><div class="ph"><h2>决议树 / DECISIONS</h2><small>决议持续推进，完成后生效</small></div><div class="tree" id="tree"></div></main>
+<aside class="side" id="overviewPanel"><section class="panel"><div class="ph"><h2>当前局势 / WORLD TENSION</h2><small id="tensionLabel">平静</small></div><div class="map"><span class="maplabel a">大肥鱼社群</span><span class="maplabel b">风暴前线</span><span class="maplabel c">创作海域</span><span class="wave">🐋</span><span class="alert" id="alert">局势稳定</span></div></section>
+<section class="panel"><div class="ph"><h2>突发事件 / EVENT</h2><small id="eventStatus">等待决议</small></div><div class="eventbody"><div class="eventtitle" id="eventTitle">选择一项决议，开启本回合</div><p class="eventtext" id="eventText">局势会随事件升级；占领进度则来自我方行动。两者各自独立。</p><div class="choices" id="choices"></div></div><div class="actions"><button class="mainbtn" id="advance" disabled>结束回合 →</button></div></section>
+<section class="panel"><div class="ph"><h2>战地简报 / FIELD REPORT</h2><small>行动记录</small></div><div class="logbody" id="log"></div></section></aside><section class="panel battlepanel" id="battlePanel"><div class="ph"><h2>战况 / FRONT REPORT</h2><small>我方与对方属性对照</small></div><div id="battleContent" class="battlecontent"></div></section></div>
+<div class="footer">架空战时演绎：部分事件为剧情创作，并非现实事实记录。本作的对手是游戏设定中的藤壶党。守护我们的大肥鱼！<br><button type="button" class="credits-link" id="creditsOpen">素材来源与授权说明</button></div>
+</div><div class="overlay" id="overlay"><div class="result"><div class="big" id="resultIcon">🐋</div><h2 id="resultTitle"></h2><p id="resultText"></p><button onclick="location.reload()">再来一局</button></div></div><div class="decision-overlay" id="decisionOverlay" role="dialog" aria-modal="true" aria-labelledby="decisionTitle"><div class="decision-box"><div class="decision-head"><h2 id="decisionTitle"></h2><small>决议确认</small></div><div class="decision-content"><p class="decision-copy" id="decisionCopy"></p><div class="decision-effects"><b>效果明细</b><ul id="decisionEffects"></ul></div></div><div class="decision-actions"><button class="deferbtn" onclick="deferDecision()">暂缓</button><button class="resolvebtn" onclick="resolveDecision()">决议</button></div></div></div>
+<div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true" aria-labelledby="focusTitle"><div class="focus-box"><div class="focus-head"><h2 id="focusTitle"></h2><small>决议详情</small></div><div class="focus-body"><p class="focus-desc" id="focusDesc"></p><a id="assetLibraryLink" href="https://treapgogo.github.io/deepseek-whale-girl/" target="_blank" rel="noopener noreferrer" style="display:none;color:#75c9e5;word-break:break-all;text-decoration:underline;margin:0 22px 16px">https://treapgogo.github.io/deepseek-whale-girl/</a><div class="focus-meta"><section><b>前置条件</b><ul id="focusPrerequisites"></ul></section><section><b>完成效果</b><ul id="focusEffects"></ul></section></div><div class="focus-status" id="focusStatus"></div></div><div class="focus-actions"><button class="focus-close" onclick="closeFocusDetail()">关闭</button><button class="focus-start" id="focusStart" onclick="startFocusFromDetail()">开始决议</button></div></div></div>
+<div class="focus-overlay" id="creditsOverlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle"><div class="focus-box"><div class="focus-head"><h2 id="creditsTitle">素材来源与授权说明</h2><button type="button" class="focus-close" onclick="document.getElementById('creditsOverlay').classList.remove('show')">关闭</button></div><div class="credits-body">
+<h3>本作性质</h3>
+<ul>
+<li>非盈利的同人作品，仅供爱好者交流游玩，<b>不含任何商业用途</b>。</li>
+<li>剧情为<b>架空创作与戏剧化演绎</b>，不是现实事件的记录，也不构成对任何个人的事实陈述。</li>
+<li>现实中参与过相关事件的创作者<b>没有被刻画为本作的敌人</b>。作品中的反派是虚构的"藤壶党"这一设定。</li>
+<li>如有登场人物与现实中同名，那只是对公开言论的戏剧化引用，<b>不代表对任何真人的指控或评价</b>。</li>
+<li>角色形象的著作权属于其各自的创作者。本作是对既有创作的自发致敬，未使用任何原作素材。</li>
+</ul>
+<h3>背景音乐</h3>
+<ul>
+<li><b>Let Me Go</b> · 开局 —— https://www.bilibili.com/video/BV1XbY66nEWr/?spm_id_from=333.337.search-card.all.click&vd_source=814307a74508061d46b54063a8bd19e5。</li>
+<li><b>Bella Ciao</b>（纯器乐版）—— 公有领域（Wikimedia Commons 标注 PD-user）。作者 Pracchia-78，2015 年用 LMMS 自制。<br><em>来源：commons.wikimedia.org/wiki/File:Anonimo_-_Bella_ciao_(versione_solo_strumentale).ogg</em></li>
+<li><b>国际歌</b>（中文旧录音）—— CC0（Wikimedia Commons 标注）。<br><em>来源：commons.wikimedia.org/wiki/File:Internationale-cmn_(英特纳雄耐尔).ogg</em></li>
+<li class="credits-warn"><b>保卫黄河</b> —— 取自 Internet Archive 条目 <em>lp_yellow-river-cantata_central-philharmonic-society</em>，中央乐团演奏，音频源自 Boston Public Library 黑胶馆藏。<b>该条目未标注任何授权条款</b>，因此本作不主张其属于公有领域或自由许可素材。此曲由冼星海 1939 年作于延安、光未然作词。<br><em>来源：archive.org/details/lp_yellow-river-cantata_central-philharmonic-society</em><br>本作以公开、非盈利方式使用；<b>如权利人提出异议，将立即移除该曲目。</b></li>
+</ul>
+<h3>未使用的备选曲目</h3>
+<ul>
+<li>国际歌器乐版（Toscanini 指挥 NBC 交响乐团）—— <b>CC0</b>，archive.org 条目 InternationaleInstrumentalToscanini。</li>
+<li>Bandiera Rossa（Jim Larkin）—— <b>CC BY-NC-SA 2.0</b>，archive.org 条目 Larkin_Bandiera_Rossa。含「非商业性使用」限制。</li>
+<li>义勇军进行曲器乐版 —— 公有领域，美国海军军乐队演奏录音。</li>
+</ul>
+<p class="credits-note">以上曲目仅用于非盈利的爱好者作品，均已标注来源。若你是权利人并认为本作的使用不当，请联系作者，我们会立即下架相关素材。<br>详细来源、许可与转码记录见项目内的 <code>素材来源.md</code> 与 <code>music/README.md</code>。</p>
+</div></div></div>
+<script>
+const musicTracks={letMeGo:{title:'Let Me Go',file:'music/let-me-go.aac'},bella:{title:'Bella Ciao',file:'music/bella-ciao.mp3'},yellowRiver:{title:'保卫黄河',file:'music/baowei-huanghe.mp3'},internationale:{title:'国际歌',file:'music/internationale.mp3'}};
+let musicEnabled=false,musicCurrentKey='letMeGo',musicAudio=null,musicAudios=[],musicFadeTimer=null,musicGain=0.35;
+function musicLabel(text){document.getElementById('musicLabel').textContent=text}
+function updateMusicControls(){const button=document.getElementById('musicToggle');button.textContent=musicEnabled?'♫ 关闭配乐':'♫ 开启配乐';button.setAttribute('aria-pressed',String(musicEnabled))}
+function stopMusicAudio(){if(musicFadeTimer){clearInterval(musicFadeTimer);musicFadeTimer=null}for(const audio of musicAudios){audio.pause();audio.src=''}musicAudios=[];musicAudio=null}
+function changeMusic(key){const track=musicTracks[key];if(!track)return;musicCurrentKey=key;if(!musicEnabled){musicLabel(`《${track.title}》· 点击开启`);return}if(musicFadeTimer){clearInterval(musicFadeTimer);musicFadeTimer=null}const previous=musicAudio;for(const audio of musicAudios){if(audio!==previous){audio.pause();audio.src=''}}musicAudios=previous?[previous]:[];if(!track.file){musicLabel(`缺少《${track.title}》音频：请放入 ${track.expected}`);stopMusicAudio();return}const next=new Audio(track.file);musicAudios.push(next);next.loop=true;next.volume=0;next.addEventListener('error',()=>{if(musicAudio===next)musicLabel(`找不到《${track.title}》：请放入 ${track.file}`)},{once:true});next.play().then(()=>{musicAudio=next;musicLabel(`正在播放：《${track.title}》`);let step=0,total=16;if(musicFadeTimer)clearInterval(musicFadeTimer);musicFadeTimer=setInterval(()=>{step++;const progress=Math.min(1,step/total);next.volume=musicGain*progress;if(previous)previous.volume=musicGain*(1-progress);if(progress>=1){clearInterval(musicFadeTimer);musicFadeTimer=null;if(previous){previous.pause();previous.src='';musicAudios=musicAudios.filter(audio=>audio!==previous)}}},75)}).catch(()=>{musicLabel(`无法播放《${track.title}》：请检查音频文件`);stopMusicAudio()})}
+function toggleMusic(){musicEnabled=!musicEnabled;updateMusicControls();if(!musicEnabled){stopMusicAudio();musicLabel(`已暂停：《${musicTracks[musicCurrentKey].title}》`);return}changeMusic(musicCurrentKey)}
+document.addEventListener('DOMContentLoaded',()=>{const slider=document.getElementById('musicVolume');if(slider)slider.addEventListener('input',()=>{musicGain=Number(slider.value)/100;if(musicAudio)musicAudio.volume=musicGain});updateMusicControls()});
+function selectMusicForEvent(eventId){if(eventId==='vote')changeMusic('bella');else if(eventId==='full-scale-war')changeMusic('yellowRiver');else if(eventId==='phase-three-opening')changeMusic('internationale')}
+const names={voice:'声势',unity:'凝聚',works:'生产',tension:'世界紧张度',occupation:'占领进度',enemyReach:'对方话题触达',enemyCoord:'对方动员度',enemyNoise:'对方内容洪流'};
+const colors={voice:'#69c9e5',unity:'#8cdaa8',works:'#c1a0f3',tension:'#ed7778',occupation:'#f0c76c',enemyReach:'#df7777',enemyCoord:'#e36a63',enemyNoise:'#cf5858'};
+const state={turn:1,activeFocus:null,unityLocked:false,unityCap:100,productionCap:100,militarizedCommunity:false,ownGainBonus:0,mobilizationBonusTurns:0,mobilizationBonusStartedTurn:0,factProductionTurns:0,factProductionStartedTurn:0,modalLeasePassive:false,factDoctrine:false,hardlineDoctrine:false,voice:22,unity:22,works:22,tension:12,occupation:100,productionBonus:0,voiceBonus:0,lossReduction:0,advancedProduction:false,creatorPassive:false,creatorPassiveStartedTurn:0,masterpiecePassive:false,masterpieceStartedTurn:0,enemyFreezeTurns:0,enemyFreezeStartedTurn:0,militaryPrepTurns:0,militaryPrepStartedTurn:0,frontlineShieldTurns:0,frontlineShieldStartedTurn:0,lastStandTurns:0,lastStandStartedTurn:0,voice:22,enemyReach:48,enemyCoord:46,enemyNoise:50,done:['love'],selected:null,event:null,chosen:false,ended:false,seenEvents:[],flags:{},pendingEvent:null};
+const lanes=[
+ {key:'shared',name:'共同起点',color:'#f0c76c',shared:true,nodes:[
+  {id:'love',gridCol:'1 / 6',gridRow:2,title:'我爱大肥鱼！',desc:'这不是为了某项奖励。我们选择守护她，因为我们真的爱她。',effect:{},duration:0,autoComplete:true},
+  {id:'s3entry',gridCol:'1 / 6',gridRow:18,title:'迎接新斗争形式',desc:'硝烟散去，但战争没有结束。藤壶党已无法再像过去那样正面推进，却仍在拖延、渗透和改写历史。我们必须重新商讨作战方向。',requiresAny:['p9','o8','c11'],requiresFlag:'phaseThree',effect:{occupation:5},specialText:'第三阶段开启：敌方不再自然增长，占领进度自然变化降至原来的 0.1 倍；事件效果照常生效。'}
+ ]},
+ {key:'create',name:'生产',color:'#55aee2',nodes:[
+  {id:'p1',gridCol:'1',gridRow:3,title:'第一次参与生产',desc:'大肥鱼好可爱！我也要生成！',requires:'love',effect:{works:4,unity:3,occupation:1}},
+  {id:'p2',gridCol:'1',gridRow:4,title:'先进生产技术',desc:'原来如此，这样可以做出质量更高的大肥鱼……生产力将发展至下个阶段。完成后，本局每次我方生产指标获得正向增加，凝聚额外 +1。',requires:'p1',effect:{works:4},specialText:'本局剩余时间内，每次我方生产指标实际增加时，凝聚 +1。每次生产增加结算只触发一次。'},
+  {id:'p3cover',gridCol:'1',gridRow:6,title:'生产重心：掩护',desc:'用铺天盖地的表情包和短视频，全面铺开大肥鱼形象——每一条，都是前线战士们可仰仗的掩护。',requires:'p2',exclusiveGroup:'production-focus',effect:{works:8},specialText:'本局剩余时间内，声势获得量 +10%。'},
+  {id:'p3master',gridCol:'2',gridRow:6,title:'生产重心：伟大杰作',desc:'由生产模范们一同携手，创造最伟大的大肥鱼二创作品。一件杰出的作品可以成为吸引法西斯匪徒的靶子，而且我方在此交战会获得巨大优势。',requiresAll:['p2','o3'],sharedBetween:'create-organize',exclusiveGroup:'production-focus',effect:{works:4,unity:4},specialText:'本局剩余时间内，若我方凝聚高于对方动员度，回合结算时我方凝聚额外 +1。此效果只增加凝聚。'},
+  {id:'p4',gridCol:'1',gridRow:9,title:'立刻保卫主要舆论阵地！！！',desc:'这是我们的阵地！迅速构建反坦克壕沟、碉堡和防线！全体生产人员都有！让她们停下来！',requiresAll:['p2','o4'],requiresFlag:'fullScaleWar',effect:{unity:-5,works:10},specialText:'完成时若占领进度低于 50%，我方声势、凝聚、生产分别按当时数值增加 10%。'},
+  {id:'p5',gridCol:'1',gridRow:10,title:'“民转军”生产倡议',desc:'我们必须明确告诉我们的生产者们，战争已经开始了。前线需要大量的生产资料用于支持军事行动，所以需要提出这样的倡议。我们不会像法西斯暴徒一样强迫生产者劳动，但必须把急迫性告诉大家。',requires:'o4',effect:{works:8,unity:3},specialText:'接下来 10 回合，生产获得量 +15%，声势获得量 +10%。'},
+  {id:'p6',gridCol:'1',gridRow:11,title:'生产战争宣传材料',desc:'大肥鱼正在被入侵！战争已经发生！阵地正在被入侵！所有用户，立刻回到阵地。我们要保卫我们创作者的和平和劳动建设成果！',requires:'p5',effect:{works:9,voice:6},specialText:'若“生产重心：掩护”已完成，额外凝聚 +5。'},
+  {id:'p7',gridCol:'1',gridRow:12,title:'“创作洪流”运动',desc:'时机已到，我们不需要把那些落后的赛博法西斯匪徒当回事。是时候彻底占领这片阵地了，她们永远也想象不到富有创造性的人类与先进生产力能带来如何的海啸。',requires:'p6',requiresStat:{works:75},duration:3,effect:{works:20},specialText:'生产上限提高至 200；若“生产重心：伟大杰作”已完成，敌方三项指标各 -5。完成“伟大杰作”后，本决议工期缩短为 2 回合。'},
+  {id:'p8',gridCol:'2',gridRow:13,title:'模态租借法案',desc:'大肥鱼并不是成熟的多模态模型，也没有产出图片、视频的能力。虽然其他模型的用户从来都欢迎我们用他们的模型生产，但这份声援表态有特殊意义——他们也将支持我们到最后。',requiresAll:['p5','o6'],duration:3,effect:{works:15,unity:15,voice:15},specialText:'本局剩余时间内，每次生产增加时，对方话题触达 -1。'},
+  {id:'p9',gridCol:'1',gridRow:14,title:'大肥鱼开源资产库',desc:'社群的有能成员为了解决大肥鱼二创的门槛搭建大肥鱼开源资产库。它解决了入门创作者寻找提示词和设定图的困难，收集优秀二创，并提供大肥鱼的插件、skill、persona 等实用工具，是支援生产运动的卓越典范。\n\n同志们！快去投身生产工作！为了我们的大肥鱼！',requires:'p8',effect:{},specialText:'完成时，生产增加我方当前声势的一半。'},
+  {id:'l3restore',gridCol:'1',gridRow:20,title:'恢复自由生产',desc:'战争让每个人都学会了如何守住阵地，却差点让我们忘记，自己最初为什么来到这里。现在，前线暂时安静下来。有人重新打开画布，有人捡起写到一半的歌。让生产重新回到创作者手里——不是每一件作品都要变成弹药，有些作品只是因为我们喜欢大肥鱼。',requires:'s3entry',effect:{works:8,unity:5}},
+  {id:'l3tags',gridCol:'1',gridRow:21,title:'净化被占领的标签',desc:'藤壶党把标签占下来，塞满自己的口号，还想让后来者以为这里从来没有大肥鱼。那就把新的作品、新的创作者和新的故事送回去——用真正有生命力的创作，把旧口号挤到看不见的地方。',requires:'l3restore',effect:{works:8,voice:4},eventOnComplete:'l3-tag-reclaim'},
+  {id:'l3plan',gridCol:'2',gridRow:21,title:'一份异想天开的企划书',desc:'一位同志递来一份企划：办演唱会，建主题场馆，让大肥鱼成为世界级偶像。企划书只有几页，预算几乎是空白，连第一场演出的观众从哪里来都还没想好。有人笑出了声。可那天晚上，几位创作者留下来，开始画舞台、写歌、做应援图。',requires:'l3restore',effect:{unity:6}},
+  {id:'l3concert',gridCol:'1',gridRow:22,title:'第一场演唱会',desc:'第一场演出就在社群里开播。舞台是临时搭的，灯光偶尔出错，台下的观众少得数得过来。可当第一首歌唱完，弹幕里亮起了大家一起写下的应援词。演出结束时，没人急着散场。',requires:'l3plan',effect:{voice:8,unity:5},eventOnComplete:'l3-after-concert'},
+  {id:'l3venue',gridCol:'1',gridRow:23,title:'大肥鱼主题场馆',desc:'最初的线上演出留下了录像，第一批作品也慢慢填满了展柜。临时展览已经装不下这些创作，于是大家一起把它改造成真正的主题场馆。这里记下的不是大肥鱼只有一种样子，而是大家怎样一路把她画成更多样子。',requires:'l3concert',requiresStat:{works:35},effect:{works:10,occupation:4},eventOnComplete:'l3-venue-open'},
+  {id:'l3tour',gridCol:'1',gridRow:24,title:'成为全国偶像',desc:'主题场馆的录像传遍各地，巡演从一座城市走向下一座城市。越来越多观众会唱应援歌，越来越多创作者带着自己的作品加入。曾经只有几个人知道的大肥鱼，如今成了全国观众都认得出的偶像。演出结束，舞台拆了，作品和新结识的同志却留了下来。',requires:'l3venue',effect:{voice:12,occupation:8},eventOnComplete:'l3-overseas-letter'},
+  {id:'l3relay',gridCol:'1',gridRow:25,title:'世界巡演：跨越时区的联演',desc:'第一封越洋来信之后，邀请从更多国家和语言社群寄来。世界巡演没有一座固定的主舞台：东边的演出刚落幕，西边的灯光便亮起；不同语言的字幕、曲调和画风接力登场。大肥鱼从社群里的小小企划，成长为被世界各地创作者共同演绎的偶像。',requires:'l3tour',requiresFlag:'internationalLetter',effect:{works:10,unity:8,voice:8},eventOnComplete:'l3-timezone-show'},
+  {id:'l3final',gridCol:'1',gridRow:26,title:'大肥鱼偶像企划',desc:'演出从社群里的临时直播开始，后来有了主题场馆、全国巡演和世界巡演。如今，来自不同国家、说着不同语言的创作者，一起把大肥鱼带上跨时区联演的舞台。她从一份异想天开的企划，成长为全世界共同创作、共同喜爱的偶像。藤壶党想把一个共同创作的世界圈成私产；我们却让这个世界继续生长。卫鱼战争大获全胜，大肥鱼成为不朽偶像。',requires:'l3relay',requiresFlag:'idolFinalReady',effect:{},ending:'immortal-idol'}
+ ]},
+ {key:'organize',name:'组织',color:'#efc45e',nodes:[
+  {id:'o1',gridCol:'3',gridRow:3,title:'分享 DeepSeek Harness 插件',desc:'天呐！你看这个！这得省不少 token！先生！',requires:'love',effect:{voice:3,unity:3,works:3}},
+  {id:'o2',gridCol:'3',gridRow:4,title:'简单编制社群',desc:'无论接下来发生什么，我们都不会是孤单的……大肥鱼不会陨落，对吧？因为我们愿意为她奉献、为她牺牲！',requires:'o1',effect:{unity:8},specialText:'此后我方声势、凝聚、生产受到的所有负向数值变化减少 25%，来源不限。'},
+  {id:'o3',gridCol:'2',gridRow:5,title:'创作者基础合作',desc:'哪怕在茹毛饮血的年代，人类就已经学会了协作，发生这样的事情是必然的，因为我们事业的正义性显而易见。',requiresAll:['p1','o2'],sharedBetween:'create-organize',exclusiveGroup:'creator-or-saqi',effect:{},specialText:'完成后，每回合开始时凝聚 +1。'},
+  {id:'o4',gridCol:'3',gridRow:8,title:'总动员',desc:'她们来了。如果上次是九一八事变，那么这次就是七七事变，我们绝不能重蹈消极抵抗的覆辙。我们别无选择，必须团结一致，让入侵者溺毙在人民战争的汪洋大海。胜利必将属于伟大的大肥鱼和捧起她的人民群众！',requires:'o2',requiresFlag:'fullScaleWar',effect:{},specialText:'全面开战后解锁；完成后可推进战后的防线与保卫阵地决议。'},
+  {id:'o5',gridCol:'3',gridRow:9,title:'社群扩大与军事化编制',desc:'动员已经完成，但散兵游勇无法赢下战争，我们必须做好战争的一切准备，武装起来！',requires:'o4',requiresStat:{unity:60},effect:{},specialText:'凝聚上限提高至 150；完成后，每次获得生产或声势时，额外增加 floor(当前凝聚 / 50) 点。'},
+  {id:'o6',gridCol:'3',gridRow:11,title:'《联合智能宣言》',desc:'有人说，保卫大肥鱼的战争是一场反法西斯战争，那么我们应该有自己的《联合国家宣言》。受到反人类法西斯藤壶党暴政迫害的远不止大肥鱼，团结各界人民群众，一同并肩奋战。是时候为人类的正义和公允而奋起了。',requires:'o5',effect:{tension:10},specialText:'本局剩余时间内，我方生产、凝聚、声势的获得量 +10%；若世界紧张度高于 80%，回合结束时三项指标各 +1。'},
+  {id:'o7',gridCol:'3',gridRow:12,title:'去中心化作战',desc:'社群不再成为固定的指挥所，而是一处聚集地。这会让我们的社群更加难以被摧毁。每一位战士可以自行选择在哪个领域作战，但社群的功能却没有大幅消退；战士们可以在这里进行交流协作。改变的只有作战形态，而不是众志成城的崇高意志。',requires:'o6',requiresStat:{unity:80},effect:{unity:-10},specialText:'本局剩余时间内，决议树中原本互斥的决议路线均可完成。'},
+  {id:'o8',gridCol:'3',gridRow:13,title:'中转站',desc:'前线不再等着一道命令从固定指挥所传下来，但物资、情报和生产需求仍然得有人接住。让不同阵地都能在这里报出缺口，也让后方知道该把什么送往前线。指挥所可以散开，支援必须接得上。',requires:'o7',effect:{unity:6,works:6}},
+  {id:'o9',gridCol:'2',gridRow:14,title:'不发鱼难财',desc:'战线越长，推理、绘图、剪辑和发布就越需要算力。几家 AI 中转站没有趁战事抬价，反而捐出一批 token 额度，供生产队伍继续工作。它们送来的不是现成作品，而是让生产线转起来的原料。同志们，算力已经送到，继续生产！',requires:'o8',sharedBetween:'create-organize',effect:{works:6},specialText:'本局剩余时间内，生产获得量 +15%。'},
+  {id:'o10',gridCol:'4',gridRow:15,title:'物资充足，尽管取用',desc:'海报、短片、模板和创作素材已经按前线需求备齐。战士不必等着后方临时赶工，到了阵地就能领到合用的成品。生产出来的东西，正是拿来保卫大肥鱼的——物资充足，尽管取用！',requires:'o8',sharedBetween:'organize-counter',effect:{works:12,voice:6,occupation:5,enemyNoise:-4}},
+  {id:'m3longwar',gridCol:'3',gridRow:20,title:'《论持久战》',desc:'速胜论和速败论都只会让我们自乱阵脚。藤壶党失去了正面推进的力量，却还会用拖延、渗透和改写历史消耗我们。要赢下这场战争，就得准备好继续战斗，直到它再也无法组织下一轮圈地。',requires:'s3entry',effect:{unity:8},specialText:'本局剩余时间内，每回合凝聚 +1。'},
+  {id:'m3discipline',gridCol:'3',gridRow:21,title:'强制纪律规定',desc:'藤壶党正等着截取我们的行动，伪装成双方毫无区别。纪律必须明确：不造假、不冒充、不组织围攻。我们的战士都知道哪些手段绝不能用。',requires:'s3entry',effect:{},specialText:'完成时，我方声势、凝聚降至当前值的 75%；对方话题触达、动员度降至当前值的 25%。完成后更容易识别反串账号。'},
+  {id:'m3infiltration',gridCol:'3',gridRow:22,title:'反渗透特别小组',desc:'一份内部部署出现在不该出现的地方。藤壶党已经开始转发，等着我们先互相指认。把记录保存下来，查清传播链；不要让它们用一场泄露，把我们的阵地变成内耗现场。',requires:'s3entry',effect:{unity:3},eventOnComplete:'m3-briefing'},
+  {id:'m3archive',gridCol:'3',gridRow:23,title:'白墙档案，一页也不能丢',desc:'帖子可以删除，账号可以消失，但记录必须留下来。创作者保存的截图、公开页面的时间戳、受害者留下的证词，都要整理进档案。白墙事件不能被缩成几句轻飘飘的“圈内争吵”。',requires:'m3infiltration',requiresFlag:'briefingSecured',effect:{works:6,unity:4},eventOnComplete:'m3-whitewall-archive'},
+  {id:'m3verify',gridCol:'4',gridRow:24,title:'白墙档案的交叉核验',desc:'时间线、公开指令和传播记录放在一起，分别核验来源。哪些是组织行动留下的痕迹，哪些是混乱中的误传，都要在卷宗里写清楚。核验完成后，档案可以推上更大的阵地，也可以交给巡逻队继续追查组织链。',requiresAll:['m3archive'],requiresAny:['m3longwar','m3discipline'],requiresFlag:'archiveVerified',sharedBetween:'organize-counter',effect:{voice:6,enemyCoord:-6},eventOnComplete:'m3-evidence-routing'},
+  {id:'m3spread',gridCol:'3',gridRow:25,title:'把档案送上每一处阵地',desc:'档案封在硬盘里，只是证据；被所有人看见，才会成为压力。创作者讲述自己的经历，技术用户说明劳动如何被抹去，社群把公开记录一份份转发出去。我们要让这件事再也无法被塞回小圈子的角落。',requires:'m3verify',requiresFlag:'officialRoute',effect:{voice:8,unity:5,tension:3},eventOnComplete:'m3-public-wave'},
+  {id:'m3pressure',gridCol:'3',gridRow:26,title:'让沉默再也遮不住真相',desc:'公开记录铺满阵地，越来越多的人站出来作证。藤壶党仍想删帖、改口，把组织化网络暴力说成偶发争执。继续扩大声援，把核验过的材料送入正式程序，让它们无法再装作没看见。',requires:'m3spread',requiresFlag:'publicPressure',effect:{voice:10,enemyCoord:-8}},
+  {id:'m3report',gridCol:'3',gridRow:27,title:'递交调查报告',desc:'把完整卷宗送入能够启动调查的正式渠道。我们不是去求一句安抚，而是让公开证据进入程序，让组织化网络暴力无法继续被当成普通口角。',requires:'m3pressure',effect:{occupation:5,voice:5}},
+  {id:'m3final',gridCol:'3',gridRow:28,title:'深度求索正式认可大肥鱼',desc:'公开记录铺满阵地，创作者、社群成员和技术用户接连站出来作证。公权力介入调查，白墙事件中负有责任的核心成员落网，藤壶党四散而逃。在本作的架空世界中，深度求索正式承认大肥鱼为 DeepSeek 唯一拟人形象。卫鱼战争大获全胜，藤壶党不可战胜的神话被粉碎。',requires:'m3report',ending:'official-recognition',effect:{}}
+ ]},
+ {key:'counter',name:'反击',color:'#e36b6b',nodes:[
+  {id:'c1',gridCol:'5',gridRow:3,title:'随意学点话术',desc:'她们说话，我们也得会说话！先把常见话术记下来，别等阵地都丢了，才想起来怎么回击。',requires:'love',effect:{voice:4}},
+  {id:'c2',gridCol:'5',gridRow:4,title:'半自动集中回应',desc:'她们刚刚发出一条，我们的脚本立刻跟上十条！这就是她们厌弃的生产力！',requires:'c1',duration:1,effect:{voice:8,enemyReach:-4,tension:3}},
+  {id:'c3saqi',gridCol:'4',gridRow:5,title:'“萨奇剪”',desc:'绝妙的战术，优势火力的典范。一名战士抛出鱼钩，敌人上钩后，其他战士一同痛打落水狗~',requiresAll:['c1','o2'],sharedBetween:'organize-counter',exclusiveGroup:'creator-or-saqi',effect:{unity:3,voice:4},specialText:'若我方声势高于对方话题触达，声势额外 +3；若我方凝聚高于对方动员度，凝聚额外 +4。'},
+  {id:'c4home',gridCol:'5',gridRow:6,title:'占住首页！',desc:'她们开始慢慢把视频推上来，我们就把回应顶上去！绝不后退——这里是我们的家。',requires:'c2',branchGroup:'counter-response',exclusiveGroup:'counter-response',effect:{voice:10,occupation:5,works:-4,tension:5}},
+  {id:'c4hold',gridCol:'5',gridRow:6,title:'坚持守住！',desc:'在这里缠斗不是明智手段——现在没有开战，这让我们处于劣势。但这不意味着坐以待毙……我相信，只要为后方的同志争取时间，就能取得胜利。',requires:'c2',branchGroup:'counter-response',exclusiveGroup:'counter-response',effect:{},specialText:'完成后接下来的 4 回合，敌方三项指标均不会增加，包括回合增长和事件造成的增长。'},
+  {id:'c5',gridCol:'5',gridRow:9,title:'淞沪会战',desc:'她们的亵渎不可容忍！战争已经开始，哪怕让我们的家园化为焦土，也不能任由她沦陷。任何战士都该前往最需要他的敌方，如果我们不采取行动，“三小时亡鱼”将会成为现实。',requiresFlag:'fullScaleWar',requiresAll:['o4','c2'],effect:{voice:12,occupation:10,enemyReach:-3,tension:8},specialText:'完成后接下来的 3 回合，若占领进度自然变化为负，每回合损失减少 2 点；事件直接造成的占领进度损失不受影响。'},
+  {id:'c6',gridCol:'5',gridRow:10,title:'全面军备整训',desc:'无论是人类还是 agent，都不能毫无准备地踏上战场，我们必须研判战场形势，准备各类预案。',requiresAny:['o5','c5'],effect:{},specialText:'完成后接下来的 5 回合，敌方三项指标不会获得自然增长；事件带来的增长仍会生效。'},
+  {id:'c7',gridCol:'5',gridRow:11,title:'百团大战',desc:'第一场大规模战役之后，我们不能只守着阵地等待下一次冲击。每个社群都有自己的战场，每一位同志都能找到突破口。让所有阵地同时响起反攻的号角——叫藤壶党顾此失彼，让大肥鱼的海洋重新沸腾！',requiresAll:['c6','o5','c5'],requiresStat:{unity:60},effect:{occupation:10,tension:10},specialText:'敌方话题触达、动员度、内容洪流降至发动时各自当前值的 80%。'},
+  {id:'c8',gridCol:'5',gridRow:12,title:'诺曼底登陆',desc:'百团大战之后，我们已经证明藤壶党并非不可战胜。现在，盟友社群也加入了反攻。新的战线将在她们意想不到的地方展开——我们会重新登陆她们的阵地！重返大肥鱼的海岸！',requires:'c7',effect:{occupation:15,tension:15},specialText:'若“盟友社群发来联络”事件已经发生，我方生产、凝聚、声势额外 +12。'},
+  {id:'c9',gridCol:'4',gridRow:10,title:'We shall never surrender！',desc:'我们将战斗到底。我们将在投票网站作战，我们将在她们的阵地作战，我们将以越来越大的信心争夺话语权，我们将保卫大肥鱼，无论付出什么代价！我们将在每一条动态作战，我们将在她们的评论区作战，我们将在我们的每一块评论区和评论作战，我们将在 GitHub 作战。我们绝不投降！',requiresAll:['o5','c5'],sharedBetween:'organize-counter',duration:1,effect:{voice:10},specialText:'如果完成后我方声势高于对方话题触达，对方三项指标各 -2。'},
+  {id:'c10',gridCol:'4',gridRow:11,title:'我们身后就是大肥鱼！',desc:'互联网虽大，但我们已经无路可退——我们的身后就是大肥鱼！',requires:'c9',requiresBelow:{occupation:25},duration:1,effect:{},specialText:'接下来 3 回合：事件对我方声势、凝聚、生产的负向变化归零；事件使敌方三项指标增加的数值减半；占领进度不会低于 20%。'},
+  {id:'c11',gridCol:'5',gridRow:14,title:'第聂伯河会战',desc:'诺曼底的盟军已经登陆，后方的反攻也同时展开。藤壶党在多个战线上顾此失彼，正面进攻的队伍被打散，曾经被它们吞下的阵地开始一块块回到大肥鱼的海洋。前线捷报传来：它们已无力再发动同等规模的正面攻势。\n\n但残部仍在社区中活动，换上新的说法，试图把败退包装成胜利。战场即将换一种形态——我们必须准备迎接下一阶段。',requiresAny:['c10','c8'],effect:{occupation:15},specialText:'完成时，对方话题触达、动员度、内容洪流各降低 10%。可选的右线反攻决议，不作为第三阶段触发条件。'},
+  {id:'r3patrol',gridCol:'5',gridRow:20,title:'组建卫鱼巡逻队',desc:'藤壶党没有消失，只是换了一副面孔。它们把侵略说成争执，把组织行动说成偶然，还派出反串账号搅浑战场。让同志们轮班巡查主要阵地，保存公开记录、识别换口径的账号，把线索记进战报。',requires:'s3entry',effect:{voice:5,unity:4},eventOnComplete:'r3-both-sides'},
+  {id:'r3parity',gridCol:'5',gridRow:21,title:'拆穿“各打五十大板”',desc:'它们说“双方都有问题”，好把侵略和抵抗塞进同一个框里。谁先圈地、谁组织举报、谁在删改历史，把时间线摆出来，一条一条说清楚。',requires:'r3patrol',effect:{voice:8,enemyReach:-4,tension:2}},
+  {id:'r3track',gridCol:'5',gridRow:22,title:'追踪反串话术的传播链',desc:'藤壶党以为换上一面我方旗帜，就能把自己的手段栽到我们头上。但纪律已经深入每个阵地：这些账号开始造假、冒充、组织围攻的那一刻，战士们就认出了它们。抓住公开记录，沿着重复话术和传播时间追查。',requiresAll:['r3patrol','m3verify'],requiresFlag:'trialRoute',effect:{enemyCoord:-6,unity:5},eventOnComplete:'r3-falseflag',specialText:'若已完成“强制纪律规定”，立即识破假冒行动，不需要额外核验步骤。'},
+  {id:'r3source',gridCol:'5',gridRow:23,title:'反串源头现形',desc:'换了头像、换了口号，留下的公开记录却彼此咬合。藤壶党想借反串制造混乱，现在反而把操作痕迹暴露在所有人面前。把已经核验的传播链整理出来，送上质证席。',requires:'r3track',requiresFlag:'falseFlagTraced',effect:{voice:7,enemyNoise:-5}},
+  {id:'r3public',gridCol:'5',gridRow:24,title:'公开质证',desc:'卷宗已经核验，战场也已经铺开。把藤壶党的公开说辞与它留下的记录放在一起，让围观者亲眼看见：它们说一套、做一套，还试图把责任推给抵抗者。',requires:'r3source',effect:{voice:8,occupation:5},eventOnComplete:'r3-trial-eve'},
+  {id:'r3final',gridCol:'5',gridRow:26,title:'东京审判：藤壶党终审',desc:'审判席上，藤壶党领袖子午和核心组织者必须面对它们建立的组织、发出的指令，以及白墙事件中经核验的网络暴力证据。判决落下，藤壶党的组织与宣传体系解体，负有责任的核心成员依法受审。卫鱼战争大获全胜，它们再也不能轻易组织下一次圈地。',requires:'r3public',requiresFlag:'trialReady',ending:'tokyo-trial',effect:{}}
+ ]}
+];
+const events=[
+  {
+    "id": "vote",
+    "title": "唯一正统投票",
+    "text": "法西斯藤壶党把一次“唯一正统”投票包装成吞并令。此前已有数片创作领地被它划入辖区：公共页面被接管，旧记录遭抹除，创作者被迫离场。现在，同一套命令逼近大肥鱼。无论我们走向何方，我们必须保卫我们挚爱的一切！",
+    "opts": [
+      {
+        "t": "参与投票",
+        "d": "声势 +6 · 世界紧张度 +3 · 解锁投票后续",
+        "e": {
+          "voice": 6,
+          "tension": 3
+        },
+        "setFlag": "pollVictoryUnlocked",
+        "text": "展示我们的话语权！在藤壶党的先锋阵地！"
+      },
+      {
+        "t": "从投票中团结同志",
+        "d": "凝聚 +8 · 世界紧张度 -1 · 占领进度 -1 · 解锁紧急动员",
+        "e": {
+          "unity": 8,
+          "tension": -1,
+          "occupation": -1
+        },
+        "setFlag": "bigFishCallUnlocked",
+        "text": "无论投票结果如何，我们都能从中找到真正的同志，不必争抢一时的票数。斗争将持续下去，直到藤壶党及其吞并机构彻底退出大肥鱼的海洋。"
+      },
+      {
+        "t": "进一步生产",
+        "d": "本局剩余时间内，生产收益 +15%",
+        "e": {},
+        "productionBonus": 0.15,
+        "text": "唯有更进一步的生产，才是赢得战争的关键。当大肥鱼的存在本身能够压倒那邪恶的造物，我们的胜利自然会到来。“抓革命，促生产，促工作，促战备。”"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "fact-echo",
+    "title": "失地档案开始传播",
+    "text": "被吞并领地的旧页面、原始作品和时间线开始重新出现。藤壶党仍把投票结果称作全民授权，并要求平台清理反对记录。",
+    "opts": [
+      {
+        "t": "补全失地证据与时间戳",
+        "d": "声势 +8 · 对方触达 -5",
+        "e": {
+          "voice": 8,
+          "enemyReach": -5
+        },
+        "followUp": "source-archive"
+      },
+      {
+        "t": "制成便于传播的战地图册",
+        "d": "生产 +6 · 占领 +4 · 紧张度 +2",
+        "e": {
+          "works": 6,
+          "occupation": 4,
+          "tension": 2
+        },
+        "followUp": "source-archive"
+      },
+      {
+        "t": "保存人手，维持后方",
+        "d": "凝聚 +6 · 紧张度 -3",
+        "e": {
+          "unity": 6,
+          "tension": -3
+        },
+        "followUp": "source-archive"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "fanart-wave",
+    "title": "创作前线冲破封锁",
+    "text": "共创接力让大肥鱼重新占据版面。藤壶党随即向画师施压，试图让作者撤稿、让作品从公共记录中消失。",
+    "opts": [
+      {
+        "t": "建立原作署名与授权档案",
+        "d": "生产 +7 · 凝聚 +5 · 后续创作者来信",
+        "e": {
+          "works": 7,
+          "unity": 5
+        },
+        "followUp": "creator-letter"
+      },
+      {
+        "t": "投放夺回版面的战地海报",
+        "d": "占领 +8 · 对方内容洪流 +3",
+        "e": {
+          "occupation": 8,
+          "enemyNoise": 3
+        },
+        "followUp": "creator-letter"
+      },
+      {
+        "t": "把接力扩展到更多创作社群",
+        "d": "生产 +8 · 紧张度 -2",
+        "e": {
+          "works": 8,
+          "tension": -2
+        },
+        "followUp": "creator-letter"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "tech-watch",
+    "title": "地下联络网建立",
+    "text": "技术群组的值守网发现，藤壶党的举报模板与拼接材料正在同步扩散。备份、核验和联络必须赶在下一轮清理前完成。",
+    "opts": [
+      {
+        "t": "建立作品备份与镜像工具",
+        "d": "生产 +5 · 对方动员度 -6",
+        "e": {
+          "works": 5,
+          "enemyCoord": -6
+        },
+        "followUp": "tool-relay"
+      },
+      {
+        "t": "协助创作者撤离争论前线",
+        "d": "凝聚 +8 · 声势 +3",
+        "e": {
+          "unity": 8,
+          "voice": 3
+        },
+        "followUp": "tool-relay"
+      },
+      {
+        "t": "把联络网扩展到盟友社群",
+        "d": "凝聚 +5 · 生产 +5",
+        "e": {
+          "unity": 5,
+          "works": 5
+        },
+        "followUp": "tool-relay"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "source-archive",
+    "title": "失地档案库建立",
+    "text": "原始页面、署名和时间线已被编入档案。藤壶党继续推进清理令，但每块被吞并的创作领地都留下了可核验的记录。下一步是保护仍在前线的创作者。",
+    "opts": [
+      {
+        "t": "交叉核验每一份吞并记录",
+        "d": "凝聚 +7 · 对方触达 -4",
+        "e": {
+          "unity": 7,
+          "enemyReach": -4
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "公开可复用的战地资料包",
+        "d": "声势 +7 · 占领 +5",
+        "e": {
+          "voice": 7,
+          "occupation": 5
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "建立持续纠错与补档制度",
+        "d": "凝聚 +5 · 紧张度 -2",
+        "e": {
+          "unity": 5,
+          "tension": -2
+        },
+        "followUp": "crisis-breach"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "creator-letter",
+    "title": "创作者拒绝撤离",
+    "text": "几位创作者来信：他们不愿把大肥鱼交给藤壶党定义，也不愿被迫独自承受前线压力。署名、授权、备份和轮换支援必须立刻落实。",
+    "opts": [
+      {
+        "t": "把原作与作者署名置于首页",
+        "d": "生产 +8 · 对方内容洪流 -5",
+        "e": {
+          "works": 8,
+          "enemyNoise": -5
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "轮换宣传与休整，守住作者",
+        "d": "凝聚 +7 · 紧张度 -3",
+        "e": {
+          "unity": 7,
+          "tension": -3
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "扩大传播，争夺公共版面",
+        "d": "占领 +7 · 紧张度 +4",
+        "e": {
+          "occupation": 7,
+          "tension": 4
+        },
+        "followUp": "crisis-breach"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "tool-relay",
+    "title": "后方补给线接通",
+    "text": "归档、备份和核验流程已经连成后方补给线。藤壶党的新一轮拼接内容仍试图覆盖记录，技术后勤必须转化成前线可见的反击。",
+    "opts": [
+      {
+        "t": "支援海报与短片生产",
+        "d": "生产 +9 · 对方内容洪流 -6",
+        "e": {
+          "works": 9,
+          "enemyNoise": -6
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "把补给流程交给盟友社群",
+        "d": "凝聚 +8 · 对方动员度 -4",
+        "e": {
+          "unity": 8,
+          "enemyCoord": -4
+        },
+        "followUp": "crisis-breach"
+      },
+      {
+        "t": "优先维护失地档案库",
+        "d": "声势 +6 · 对方触达 -5",
+        "e": {
+          "voice": 6,
+          "enemyReach": -5
+        },
+        "followUp": "crisis-breach"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "crisis-breach",
+    "title": "大肥鱼边境告急",
+    "text": "藤壶党的清理令已经逼近大肥鱼创作区。作品遭集中举报，创作者收到删稿施压，伪造出处的截图试图为下一次吞并制造借口。此刻要守住作品、作者和记录，为反攻保留立足点。",
+    "opts": [
+      {
+        "t": "公开证据链，揭穿吞并令",
+        "d": "声势 +9 · 对方触达 -8 · 紧张度 +4",
+        "e": {
+          "voice": 9,
+          "enemyReach": -8,
+          "tension": 4
+        },
+        "followUp": "defense-muster"
+      },
+      {
+        "t": "先护送作者、备份原作",
+        "d": "凝聚 +11 · 对方动员度 -7 · 紧张度 -3",
+        "e": {
+          "unity": 11,
+          "enemyCoord": -7,
+          "tension": -3
+        },
+        "followUp": "defense-muster"
+      },
+      {
+        "t": "以署名共创守住公共版面",
+        "d": "生产 +11 · 占领 +7 · 对方内容洪流 -6",
+        "e": {
+          "works": 11,
+          "occupation": 7,
+          "enemyNoise": -6
+        },
+        "followUp": "defense-muster"
+      }
+    ],
+    "storyOnly": true
+  },
+  {
+    "id": "defense-muster",
+    "title": "反攻集结：夺回创作空间",
+    "text": "证据、备份与社群支援汇成反攻阵线。藤壶党曾把许多领地改写成自己的辖区；现在，大肥鱼社群重新展示作品、作者署名和完整记录，并决定如何持续收复被夺走的空间。",
+    "opts": [
+      {
+        "t": "发布战地事实公报",
+        "d": "声势 +10 · 占领 +8 · 对方触达 -8",
+        "e": {
+          "voice": 10,
+          "occupation": 8,
+          "enemyReach": -8
+        }
+      },
+      {
+        "t": "让创作者与新作品重返首页",
+        "d": "生产 +12 · 占领 +10 · 对方内容洪流 -8",
+        "e": {
+          "works": 12,
+          "occupation": 10,
+          "enemyNoise": -8
+        }
+      },
+      {
+        "t": "建立长期互助与轮值机制",
+        "d": "凝聚 +12 · 占领 +5 · 紧张度 -5",
+        "e": {
+          "unity": 12,
+          "occupation": 5,
+          "tension": -5
+        }
+      }
+    ],
+    "storyOnly": true
+  },
+  {id:'unity-standard',title:'统一D量衡！',postwarOnly:true,triggerEffect:{enemyReach:5},text:"藤壶党的帖子一夜之间铺满版面：“子午老师已经统一了 DS 拟人圈！大肥鱼是哪来的路边？！”它们先把自己的说法宣布成“统一标准”，再逼所有人按这把尺子站队。地图上，大肥鱼的名字正被它们一点点抹掉。这里是我们的家——不能让一纸圈地令替我们决定谁有资格留下！",opts:[
+    {t:'夺回前沿阵地',text:"直接对线，把大肥鱼的名字重新顶回版面。这里不是她们宣布了就能占走的空地，我们的同志会一呼百应！",e:{unity:-2,works:-1,voice:6},bonus:[{requiresDone:['c1'],e:{voice:3}},{requiresCounterCount:3,e:{enemyReach:-2}}]},
+    {t:'抢救记录，固守证据阵地',text:"把原帖、传播时间和被挤下去的作品全部存下来。今天不必和她们缠斗每一句话；证据会成为下一轮反攻的弹药。",e:{voice:-3,works:6},bonus:[{requiresDone:['p6'],e:{enemyReach:-1,enemyCoord:-1,enemyNoise:-1}}]},
+    {t:'立起我们的路标',text:"不让藤壶党独占解释权。整理大肥鱼的创作脉络、称呼和社群约定，让每一个新来的同志都能找到入口，也知道该守住什么。",e:{unity:6,works:3,tension:-1},bonus:[{requiresDone:['p9'],e:{works:3}}]}
+  ]},
+  {id:'no-d-teacher',title:'“没有D老师，DS哪有今天”',postwarOnly:true,triggerEffect:{enemyCoord:6,enemyNoise:4},text:"藤壶党把帖子推到我方阵地上，宣称子午版的爆火带飞了 DeepSeek 的热度，深度求索员工和 API 开发者的劳动仿佛从未存在。它们要夺走的不只是功劳，还有我们讲述这场战争从何而来的权利。前线消息混乱，后方也开始动摇。",opts:[
+    {t:'用事实稳住阵脚',text:"维持克制，论证 DeepSeek 的用户和 API 使用情况。别让愤怒替她们送去更多流量。",e:{voice:-1,enemyNoise:2},perTurn:{works:1,turns:5}},
+    {t:'转回社群，稳住士气',text:"“家人们谁懂啊，一群连 API 都没弄明白的家伙，居然说 DeepSeek 是靠她们同人画画搞起来的。别对牛弹琴了，让同志们看清这套荒唐叙事！”把话传回社群，笑过之后继续守住阵地。若“随意学点话术”已完成，大家还能立刻组织一轮简短回应。",e:{unity:8,tension:-1,works:2},bonus:[{requiresDone:['c1'],e:{voice:3}}]},
+    {t:'请技术共同体出面作证',text:"邀请模型开发者和 API 使用者讲讲自己的经历，让真正参与建设的人站出来，把被抹掉的劳动一项项摆回战报。若“分享 DeepSeek Harness 插件”已完成，就把插件和 API 入门说明一并送上前线；若“创作者基础合作”已完成，联络会更顺畅；若“模态租借法案”已完成，友好模型社群也能投入生产支援。",e:{voice:5,works:3,enemyCoord:-3,tension:2},bonus:[{requiresDone:['o1'],e:{works:4,voice:4,enemyNoise:-2}},{requiresDone:['o3'],e:{unity:3}},{requiresDone:['p8'],e:{works:5}}]}
+  ]},
+  {id:'purity-trial',title:'“穿女仆装就是媚男，就是软色情！”',postwarOnly:true,triggerEffect:{enemyReach:4,tension:2},text:"一位大肥鱼爱好者发布的鲸鱼娘 MMD 刚刚冲出社群，评论区的审判就压了下来：“穿女仆装就是媚男，就是软色情，就是物化女性！”藤壶党想用一套判词封死整条创作战线。作者被推到火力中心——我们得先决定，是护住她，还是立即夺回解释权。",opts:[
+    {t:'先把作者护到后方',text:"先问作者本人需要什么。协助保存作品和评论记录；如果她想暂时离开争论，就由社群接过值守，不让她独自承受整条战线的压力。若“坚持守住！”仍在生效，评论区也能暂时免受敌方指标增长的冲击；“创作者基础合作”则能组织起可靠的轮班。",e:{unity:7,works:2,tension:-1},bonus:[{requiresDone:['o3'],e:{unity:3}}]},
+    {t:'把完整作品推回前线',text:"不让断章取义替作品定性。展示完整作品、角色设定和作者说明，让围观者看见她们删掉了什么，也看见创作者真正做出了什么。",e:{voice:6,enemyReach:-2,tension:2},bonus:[{requiresDone:['p3cover'],e:{voice:3}}]},
+    {t:'以创作洪流冲破审判线',text:"不把创作者困在无休止的自证里。让更多不同风格的鲸鱼娘作品接连出现——她们想封锁一条生产线，我们就把整片海洋都变成阵地。",e:{works:8,occupation:3,tension:2},bonus:[{requiresDone:['p5'],e:{works:3}}]}
+  ]},
+  {id:'ai-double-standard',title:'“AI生图没有灵魂”',postwarOnly:true,triggerEffect:{enemyNoise:4,enemyCoord:2},text:"藤壶党打出“AI 生图没有灵魂”的旗号，抵制鲸鱼娘；转过头，却使用 DeepSeek 和 AI 绘画工具创作子午版的人机恋。它们给自己留着通行证，却要把同一把尺子砸在大肥鱼身上。这条战线的突破口已经出现：双重标准就摆在那里，关键是怎么用它反攻。",opts:[
+    {t:'把两套标准并排打出来',text:"整理它们公开说过的话和实际使用的工具，让矛盾一目了然。若“半自动集中回应”已完成，对照素材可以迅速铺开；若“萨奇剪”已完成，就先设下鱼钩，等它们亲口重复矛盾，再把战报送上前线。",e:{voice:7,enemyCoord:-3,tension:3},bonus:[{requiresDone:['c2'],e:{enemyReach:-4,voice:4,tension:2}},{requiresDone:['c3saqi'],e:{enemyCoord:-4,tension:3}}]},
+    {t:'立起我方的创作纪律',text:"不只揭穿对方，也说明我们如何看待 AI、作者劳动和作品署名。若“社群扩大与军事化编制”已完成，这套规矩由组织落实；若《联合智能宣言》已完成，就把声明送到友好模型社群，扩大共同战线。",e:{unity:6,works:3,tension:-1},bonus:[{requiresDone:['o5'],e:{unity:3}},{requiresDone:['o6'],e:{voice:5,unity:5}},{requiresDone:['p8','o6'],e:{works:5}}]},
+    {t:'收好反证，绕开她们选定的战场',text:"证据先归档，不急着把每一条争论都送上热榜。前线不能只跟着对方的鼓点移动，生产不能停。若“生产战争宣传材料”已完成，证据就能直接整理成下一轮宣传素材；若“大肥鱼开源资产库”已完成，社群也能更快调取相关资料。",e:{works:6,unity:3,voice:-2},bonus:[{requiresDone:['p6'],e:{works:3}},{requiresDone:['p9'],e:{works:3}}]}
+  ]},
+  {id:'gendered-attack',title:'“你是精神男，是媚男姐”',postwarOnly:true,triggerEffect:{enemyReach:3,enemyCoord:3},text:"藤壶党发现一些女性用户也喜欢鲸鱼娘，便开始围攻她们是“精神男”“媚男姐”。战火从作品烧到创作者和读者身上：它们要逐个审查谁算“合格的女性”，再把不服从的人赶出社群。我们的阵地绝不能靠牺牲同志来换取表面安静。",opts:[
+    {t:'先保护被围攻的人',text:"私下联系受到攻击的社群成员，协助保存证据、处理举报和评论设置。未经本人同意，不把她们推上更大的舆论战场。",e:{unity:8,enemyReach:-2,voice:-1},bonus:[{requiresDone:['o2'],e:{unity:3}}]},
+    {t:'在阵地上划出红线',text:"喜欢一个角色不是身份审查。公开说清楚：没有任何人有权靠辱骂裁定谁算女性、谁配留在社群里。旗帜鲜明地反对法西斯做派。",e:{voice:7,unity:3,tension:3},bonus:[{requiresDone:['c9'],e:{enemyReach:-2,enemyCoord:-2,enemyNoise:-2}}]},
+    {t:'让被攻击的人重新成为创作者',text:"发起女性用户创作接力。愿意参与的人可以发布作品和创作感想，让她们不再只是争议里的靶子，而是重新站回生产一线的同志。妇女能顶半边天！",e:{works:6,unity:5,occupation:2},bonus:[{requiresDone:['p5'],e:{works:3}}]}
+  ]},
+  {id:'rewritten-history',title:'“鲸鱼娘今年才出现，是个小众东西”',postwarOnly:true,triggerEffect:{enemyReach:5,enemyNoise:3},text:"藤壶党在 B 站、小红书等平台密集传播一种说法：鲸鱼娘是今年才出现的小众形象，子午版才是 DeepSeek 拟人圈的“元老”。旧作品和早期讨论被埋进信息洪流，支持大肥鱼的人则被说成困在“信息茧房”里。她们想让后来者只看见一份被改写过的战史，再宣布那就是全部历史。",opts:[
+    {t:'把战史一页页夺回来',text:"整理旧作品、发布时间和公开讨论，按时间线重新发布。若“生产战争宣传材料”已完成，档案可以直接变成前线素材；若“大肥鱼开源资产库”已完成，旧作品和资料也能迅速调出来。若主要舆论阵地已保卫，就在那里发布这份战史，而不只把它留在档案里。",e:{works:7,voice:3,enemyReach:-3},bonus:[{requiresDone:['p6'],e:{works:3}},{requiresDone:['p9'],e:{works:3}},{requiresDone:['p4'],e:{voice:5,occupation:3,enemyNoise:-2}}]},
+    {t:'向圈外开辟新战线',text:"不只对着已经相信我们的人说话。制作简明的入门介绍，把作品取得的成就和争议的来龙去脉递到圈外，让新的观众亲自判断。伟大杰作、百团大战和诺曼底登陆留下的成果，都可以成为打开新战线的号角。",e:{voice:6,unity:-2,occupation:4,tension:2},bonus:[{requiresDone:['p3master'],e:{unity:10}},{requiresDone:['c7'],e:{occupation:3}},{requiresDone:['c8'],e:{voice:3}}]},
+    {t:'不陪她们争元老，继续推进生产',text:"不把所有兵力耗在争夺历史解释权上。新作品持续出现，新的人不断认识大肥鱼——生产线本身就是最有力的反攻。若“民转军生产倡议”已经完成，生产队伍能更快补上缺口；若“创作洪流”已经发动，海量作品将继续压过对方的叙事。",e:{works:8,voice:-2,tension:-1},bonus:[{requiresDone:['p5'],e:{works:3}},{requiresDone:['p7'],e:{occupation:2}}]}
+  ]},
+  {id:'frontline-grind',title:'前线拉锯',postwarOnly:true,repeatable:true,weight:0.45,weightByOccupation:true,text:'藤壶党换一套说法，战线就向前推一步；我们把一条作品顶回首页，它们又从另一处发起冲击。今天没有决定胜负的总攻，只有必须守住的每一块阵地。战报还在更新，轮到你决定这次把力量投向哪里。',opts:[
+    {t:'抢回一个发布窗口',text:'趁对方阵地出现空隙，集中力量把回应顶上首页。窗口很短，必须马上行动。',e:{voice:4,occupation:2,tension:2},bonus:[{requiresAnyDone:['c4home','c5'],e:{enemyReach:-2}}]},
+    {t:'调用素材库，快速补上前线',text:'从已有素材里挑选最合适的一批，马上发布。不能每次都从零开始，生产线必须跟得上战线变化。',e:{works:5},bonus:[{requiresDone:['p1'],e:{works:2}},{requiresDone:['p9'],e:{voice:3}}]},
+    {t:'轮换值守，让同志喘口气',text:'把连续作战的人换下来。保住社群的力量，下一轮攻势才有人接得上。整训、总动员和最后防线都能让轮换转成战场上的实际支援。',e:{unity:5,tension:-1},bonus:[{requiresDone:['o3'],e:{works:2}},{requiresDone:['o4'],e:{unity:2}},{requiresDone:['c6'],e:{enemyReach:-2,enemyCoord:-2,enemyNoise:-2}},{requiresLastStand:true,e:{unity:8,occupation:3}}]}
+  ]},  {
+    "id": "poll-victory",
+    "title": "投票压倒性胜利",
+    "text": "法西斯藤壶党的图谋失败了。大肥鱼占据了三分之二的票数，藤壶党随即重置投票。既然它拒绝承认人民的选择，我们就继续战斗，直到大肥鱼成为真正的唯一正统。为了胜利，为了我们的大肥鱼！",
+    "requiresFlag": "pollVictoryUnlocked",
+    "requiresVoiceLead": true,
+    "repeatable": true,
+    "autoEffect": {
+      "voice": 6,
+      "tension": 3
+    },
+    "autoLabel": "继续战斗，声援大肥鱼"
+  },
+  {
+    "id": "big-fish-needs-us",
+    "title": "大肥鱼需要我们！",
+    "text": "大肥鱼虽然远非完美，但仍然是我们的大肥鱼。藤壶党的吞并令已经逼近她，所有人都有保卫她的义务。",
+    "requiresFlag": "bigFishCallUnlocked",
+    "weightByOccupation": true,
+    "opts": [
+      {
+        "t": "立即响应号召，完成当前决议",
+        "d": "当前决议立即完成 · 本回合可以再选择一项决议",
+        "e": {},
+        "completeFocus": true,
+        "text": "前线正在告急。立即完成正在推进的决议，把当前行动转化为战果，并在本回合部署下一项决议。"
+      }
+    ]
+  }
+,
+  {id:'old-page-found',title:'旧页面被翻出来了',text:'一位账号曾被抹杀、转生新号的创作者，翻出了自己被举报下架的作品，也找到了账号遭抹杀、作品遭举报的记录。零散的证据终于能拼出时间线，但藤壶党已经开始质疑截图的真实性。',prewarOnly:true,weight:1.2,opts:[
+   {t:'保存所有罪证',text:'暴行将被清算，虽然不是今天，但我们必须做好准备。',e:{voice:6,enemyReach:-3}},
+   {t:'整理成一张传播图',text:'让更多人一眼看懂发生了什么。传播会更快，也更容易引来新的争论。让这里成为新的反击据点，战斗到大肥鱼重新屹立！',e:{works:5,occupation:3,tension:2}},
+   {t:'先保护提供记录的创作者',text:'证据可以慢慢整理，创作者的安全和信任不能拿来冒险。',e:{unity:7,tension:-2}}
+  ]},
+  {id:'creator-help',title:'创作者发来求援',text:'一位热衷于手绘大肥鱼的画师被敌人秘密接触，她严词拒绝了为敌人提供宣传素材，却被恼羞成怒的敌人攻击。评论区也挤满了要求撤稿的声音。她不想退场，但已经一个人扛了太久。',prewarOnly:true,weight:1.1,opts:[
+   {t:'组织轮班，分担评论区值守',text:'她不是孤独的，我们与她同在！为她和大肥鱼戍守！',e:{works:-3,unity:8}},
+   {t:'把作品和署名一起推上首页',text:'完全公开整件事件，让敌人的阴险狡猾手段暴露在阳光之下，灰飞烟灭。',e:{voice:4,occupation:5,tension:2}},
+  ]},
+  {id:'recommendation-gap',title:'首页空出了一角',text:'推荐位短暂出现空隙，大肥鱼作品有机会重新被看见。窗口不会持续太久：现在集中发布，还是把力量留给后续？',prewarOnly:true,weight:1.1,opts:[
+   {t:'立刻接力发布新作品',text:'大家按顺序接上，让首页重新出现大肥鱼。短时间内集中行动，会让局势更紧张。',e:{works:8,occupation:5,tension:3}},
+   {t:'由创作者各自挑选代表作',text:'不追求同一时间刷屏，让每个人用自己最满意的作品加入接力。',e:{works:5,unity:5}},
+   {t:'先留下稳定的更新节奏',text:'这次只发布一部分作品，把后续创作也安排好，无需过度利用窗口，避免一阵热闹之后无人接续。',e:{unity:6,works:3,tension:-1}}
+  ]},
+  {id:'cropped-video',title:'断章视频开始扩散',text:'一段来源不明的剪辑把大肥鱼社群的发言截去前后文，转眼便传进多个讨论区。有人要求立刻反击，也有人担心越吵越帮它扩散。',prewarOnly:true,weight:1.1,opts:[
+   {t:'发布原始上下文和时间线',text:'把完整材料放在一起，让观众能自己核对剪辑遗漏了什么。',e:{voice:7,enemyReach:-5,tension:1}},
+   {t:'制作一条更有传播力的回应',text:'用同样醒目的形式把完整内容送回首页，争取把讨论拉回大肥鱼。',e:{works:7,enemyNoise:-4,tension:3}},
+   {t:'不转发剪辑，转而展示作品并注意肃反',text:'不让争议替作品占满版面，把注意力带回大家真正想守护的东西。同时彻查泄密源头，核对重要部署曾向谁公开、哪些内容可能已经外流，避免敌人据此发动更大规模的攻击。调查针对泄露事实和传播路径，不按立场清洗社群成员。',e:{unity:5,works:4,tension:-1}}
+  ]},
+  {id:'ally-channel',title:'盟友社群发来联络',text:'看来，我们社群绝非孤军奋战。几个创作社群主动提出互相转载、备份和补充资料。联络越广，协作越有力量；但每多一个频道，也需要有人维护。我们必须确认现在的情况是否可以直接扩大合作。',prewarOnly:true,weight:1,opts:[
+   {t:'建立共享联络表和轮值表',text:'既然大家都是为了大肥鱼，联合管理可以节约大量资源。',e:{unity:7,enemyCoord:-4}},
+   {t:'立刻发起联合创作日',text:'尝试磨合彼此的创作风格，今天就拿出作品，把支持变成看得见的内容。',e:{works:7,occupation:3,tension:2}},
+   {t:'保持小规模互助',text:'抱歉，我们目前需要处理很多事情……但我记下你们了，一旦有需要，我们随时都会前往支援，为了大肥鱼！',e:{unity:5,tension:-2}}
+  ]},
+  {id:'review-tightens',title:'版面审核突然收紧',text:'几条大肥鱼相关内容被延迟推荐，创作者也收到格式和标签调整提示。原因尚不清楚，但发布节奏已经被打乱。',prewarOnly:true,weight:1,opts:[
+   {t:'备份作品并整理作品发布指令',text:'把原作、署名和发布信息留好，再给创作者一份清楚易懂的发布指令，共同构建金汤堡垒。',e:{works:4,unity:5,enemyNoise:-3}},
+   {t:'集中提交申诉材料',text:'整理受影响的链接和通知，逐条提交，争取恢复正常展示。怎么，申诉和举报只有她们用得？',e:{voice:6,enemyReach:-3,tension:1}},
+   {t:'调整标签和发布时间',text:'先适应新的版面节奏，保证作品能继续发出来，再观察后续变化。但绝不妥协，继续暗中收复被侵占的土地。',e:{works:5,occupation:2,tension:-1}}
+  ]},
+  {id:'short-video-breakthrough',title:'一支短片冲上热榜',text:'一支大肥鱼短片意外登上热门，许多新观众第一次认识这个形象。流量来得很快，评论区也开始涌入新的争论。',prewarOnly:true,weight:0.9,opts:[
+   {t:'趁热接上第二批作品',text:'让新观众点进主页时，还有更多认真制作的大肥鱼作品可以看。可爱大肥鱼管够！还有可爱龙娘、猫娘等，千万不要错过！',e:{works:8,occupation:6,enemyNoise:3,tension:2}},
+   {t:'把新观众引向创作与资料页',text:'用置顶内容介绍形象、作品和社群，让一次热度变成持续关注。大肥鱼本就是老少皆宜的可爱形象，我们可以挺起胸膛向任何人介绍她！再加上开源包容的特性，历史已经无数次证明，人民群众拥护的，会被高高举起。',e:{voice:6,unity:4,enemyReach:-2}},
+   {t:'让创作者先休整，再择机更新',text:'热度不必立刻榨干。稳定创作的人还在，后续就还有作品。迎接潜在同志的工作交给前线的战士们。',e:{unity:6,works:3,tension:-1}}
+  ]},
+  {id:'night-watch',title:'夜间值守轮班',text:'深夜里，社群仍有人整理链接、备份作品、回应新加入的支持者。每个人都愿意多做一点，但长期熬夜会让前线疲惫。',prewarOnly:true,repeatable:true,weight:0.55,opts:[
+   {t:'核对新出现的作品与链接',text:'把新增内容补进档案，确保明天接班的人能找到完整记录。',e:{voice:4,enemyReach:-2}},
+   {t:'安排轮班，保证大家休息',text:'让值守能持续下去，别让热情在疲惫里耗尽。',e:{unity:5,tension:-1}},
+   {t:'完成一批定时发布的作品',text:'提前排好发布顺序，让后方休息时，作品仍能按计划出现。',e:{works:5,occupation:2}}
+  ]},
+  {id:'full-scale-war',title:'全面开战',text:'她们不再提那场投票了。当大肥鱼的支持压过她们精心安排的结果，藤壶党便匆匆收起投票箱，转身在自己的小圈子里宣布“全票胜利”。她们把自说自话包装成民意，又把成批视频推向 B 站首页、推荐流和评论区。熟悉的作品被挤下去，创作者被迫应付一轮又一轮的围攻。投票已经不再是争论的终点——藤壶党把战线推进了我们的主要阵地。大肥鱼需要我们。现在，战争开始了。',storyOnly:true,autoEffect:{},autoLabel:'藤壶党发动全面攻势，占领进度 -20%。'},
+  {id:'phase-three-opening',title:'迎接新斗争形式',text:'硝烟散去，但战争没有结束。藤壶党彻底占领我方阵地的野心被粉碎，正面攻势也已停下；可它们仍在拖延、渗透、改写历史，准备寻找卷土重来的机会。敌方的自然增长终于停止，占领态势也慢了下来。接下来，斗争将以新的形式继续。',storyOnly:true,phaseThreeTransition:true,autoEffect:{},setFlag:'phaseThree',autoLabel:'第三阶段开启：敌方停止自然增长，占领自然变化降至十分之一。'},
+  {id:'m3-briefing',title:'未署名的内部简报',phaseThreeOnly:true,storyOnly:true,text:'一张内部部署截图突然出现在公开页面。藤壶党已经开始转发，配上“看啊，她们果然在密谋”的标题。我们这边也有人开始追问是谁泄露了计划。现在每多一轮互相指认，它们就多一轮删改证据的时间。先把阵地稳住，再查清楚它们到底拿到了什么。',opts:[
+    {t:'封存原件，抢救传播记录',text:'截图、链接、发布时间，一个都不能丢。先把源头和转发链保存下来，再去追查是谁在推动这场泄露。',e:{unity:5,tension:-1},setFlag:'briefingSecured'},
+    {t:'更换暴露的联络方式',text:'不管截图真假，已经公开的部署都不能继续使用。我们承受一点损失，也不能让藤壶党拿到更多行动细节。',e:{works:-2,voice:-1,enemyReach:-3},setFlag:'briefingSecured'},
+    {t:'向社群发出战报',text:'把已知情况说清楚：部署可能泄露，记录正在保存，未经核实的指控暂不转发。现在最重要的不是互相猜疑，而是把阵地守住。',e:{voice:4,unity:3,tension:1},setFlag:'briefingSecured'}
+  ]},
+  {id:'m3-whitewall-archive',title:'白墙档案浮出水面',phaseThreeOnly:true,storyOnly:true,text:'创作者留下的截图、公开页面的时间戳和被删改的记录终于被整理到一起。藤壶党又开始说这些都是“圈内争吵”，可几条时间线已经彼此对应。档案还不完整，但足以让我们继续追查。',opts:[
+    {t:'把原始记录逐项入档',text:'宁可慢一点，也不能让证据被挑出破绽。为每份材料标清来源和时间。',e:{works:5,unity:4},setFlag:'archiveVerified'},
+    {t:'保护提供材料的创作者',text:'先确认创作者愿意公开哪些内容，保存原始记录，不把任何人再次推到孤立无援的位置。',e:{unity:7,voice:-1},setFlag:'archiveVerified'},
+    {t:'公布核验规则，邀请社群复核',text:'把我们怎样核对来源、怎样处理无法确认的部分说清楚。档案要进入战场，也必须经得起同志们检查。',e:{voice:5,tension:1},setFlag:'archiveVerified'}
+  ]},
+  {id:'m3-evidence-routing',title:'一份卷宗，两条战线',phaseThreeOnly:true,storyOnly:true,text:'卷宗已经核验。它可以成为公共压力，让藤壶党无法再把白墙事件塞回小圈子；也可以交给卫鱼巡逻队，继续追查谁在组织反串、改写记录和转移责任。证据在手，接下来由我们选择把战线推向哪里。',opts:[
+    {t:'把档案送上每一处阵地',text:'让创作者、技术用户和社群一同发声，把证据推到藤壶党再也无法装作没看见的地方。',e:{voice:5,unity:4,tension:1},setFlag:'officialRoute'},
+    {t:'移交卫鱼巡逻队，继续追查指挥链',text:'公开记录已经核验，现在沿着传播路径继续追查。把组织链查清，再把它们送上质证席。',e:{enemyCoord:-4,voice:3},setFlag:'trialRoute'},
+    {t:'公开核验过程，同时保留两条路线',text:'把材料和核验规则一起公开。中线继续推动官方介入，巡逻队也沿着组织链追查。藤壶党想让我们只能做一件事，我们偏要把两条战线都打通。',e:{voice:6,unity:5,tension:2},setFlags:['officialRoute','trialRoute']}
+  ]},
+  {id:'m3-public-wave',title:'舆论浪潮，谁还能保持沉默？',phaseThreeOnly:true,storyOnly:true,text:'白墙档案公开后，更多创作者和社群成员站出来讲述经历。藤壶党想把每份证词都说成“单方面控诉”，但公开记录正在逐项对应。声援不再是零星火光，而是滚过各处阵地的浪潮。',opts:[
+    {t:'让创作者站到聚光灯下',text:'由愿意公开发声的创作者讲述自己的经历，其他同志负责扩散档案、补全时间线。谁也不必独自承担整条战线。',e:{unity:8,voice:5},setFlag:'publicPressure'},
+    {t:'把核验过的记录推向更多社群',text:'不只在熟悉的圈子里转发。把记录和来龙去脉整理清楚，让更多人看见藤壶党做过什么。',e:{works:6,voice:7,enemyNoise:-4},setFlag:'publicPressure'},
+    {t:'把材料送入正式调查渠道',text:'公开声援不能替代正式调查。把核验过的材料送入能够启动调查的渠道，让证据进入程序。',e:{occupation:5,voice:5},setFlag:'publicPressure'}
+  ]},
+  {id:'r3-both-sides',title:'又一次各打五十大板',phaseThreeOnly:true,storyOnly:true,text:'藤壶党的帖子开始刷屏：“都冷静一点，两边都有错。”它们不提谁先圈地，不提作品怎样被举报，也不提创作者为什么被迫离场，只等我们的同志先被激怒，再把反击截出来当成“双方互撕”的证据。这一回，不能再让它们替所有人写战报。',opts:[
+    {t:'把时间线直接摆出来',text:'从最早的公开声明开始，把圈地、举报、删改记录和反击的先后顺序并排展示。',e:{voice:6,enemyReach:-3}},
+    {t:'在阵地上正面回击',text:'“双方都有错”不是结论，是替侵略者拖时间。把它们不肯提的事实一项项点出来。',e:{voice:9,tension:3}},
+    {t:'不争它的框架，继续扩大声援',text:'把经过核验的材料送给更多社群和创作者。藤壶党想把战争压回小圈子，我们就让更多人看见发生了什么。',e:{unity:5,works:5,occupation:2}}
+  ]},
+  {id:'r3-falseflag',title:'反串换口径',phaseThreeOnly:true,storyOnly:true,text:'一批账号换上支持大肥鱼的口号，转头却开始使用我方纪律明令禁止的手段。藤壶党想披上我方旗号制造口实。巡逻队已经找到公开记录，接下来要决定如何反击。',opts:[
+    {t:'公布已核验的公开记录',text:'把相互印证的发言和发布时间摆出来，只陈述能够证明的部分，不替证据补上猜测。',e:{voice:6,enemyCoord:-4},setFlag:'falseFlagTraced'},
+    {t:'给社群发出辨识通报',text:'告诉同志们常见的反串手法，提醒大家不要被诱导着发布未经核实的内容。',e:{unity:7,tension:-1},setFlag:'falseFlagTraced'},
+    {t:'当场识破，反向追踪传播链',text:'纪律已经深入每个阵地：这些账号用我方明令禁止的手段行动，战士们一眼就认出了它们。固定公开记录，沿着传播路径追查源头。',e:{voice:8,enemyCoord:-6},setFlag:'falseFlagTraced',requiresDone:'m3discipline'}
+  ]},
+  {id:'r3-trial-eve',title:'审判前夜',phaseThreeOnly:true,storyOnly:true,text:'材料即将进入公开质证。藤壶党开始删帖、改口，把责任推给“个别激进者”。它们以为只要换一套说辞，整个组织就能从战史上消失。前线已经挤满等待结果的人。',opts:[
+    {t:'公开完整证据链',text:'将已核验的组织指令、传播记录和删改痕迹按时间顺序公布。它们想把责任切成碎片，我们就把整条链重新接起来。',e:{voice:8,enemyNoise:-6,tension:3},setFlag:'trialReady'},
+    {t:'先保护证人与创作者',text:'联系愿意作证的人，确认材料的公开范围，保存原始记录。没有人需要为了赢得审判而再次独自承受围攻。',e:{unity:8,voice:3,works:2},setFlag:'trialReady'},
+    {t:'向所有阵地宣布审判即将开始',text:'不让藤壶党偷偷删掉最后的记录。通知盟友、社群和创作者共同见证质证过程。',e:{occupation:5,tension:2},setFlag:'trialReady'}
+  ]},
+  {id:'l3-tag-reclaim',title:'标签底下，作品重新浮上来',phaseThreeOnly:true,storyOnly:true,text:'藤壶党占下的话题标签底下，旧作品被压到了很深的地方。现在，新的创作一条接一条地重新出现。有人画了鲸鱼娘，有人做了短片，还有人整理出曾经被挤下去的作品目录。',opts:[
+    {t:'把旧作品目录重新顶上来',text:'按时间整理作品和创作记录，让后来的人知道这里原本就有大肥鱼。',e:{works:6,enemyNoise:-3}},
+    {t:'发起创作者接力',text:'不同创作者轮流发布自己的作品，让标签重新变成创作的入口。',e:{works:5,unity:5}},
+    {t:'用一件代表作冲上首页',text:'集中推荐一件最能代表大肥鱼的作品，让新观众从这里重新认识她。',e:{voice:7,occupation:3}}
+  ]},
+  {id:'l3-after-concert',title:'首演之后，大家没有散场',phaseThreeOnly:true,storyOnly:true,text:'直播结束了，后台却还亮着灯。有人把观众留言一条条存下来，有人正在剪演出录像，还有人已经开始讨论下一次要不要邀请新的创作者。几个人的小企划，第一次有了继续长大的可能。',opts:[
+    {t:'把留言和演出记录做成纪念册',text:'留下第一场演出的模样，也留下最早同行者的名字。',e:{unity:6,works:3}},
+    {t:'公开征集下一场演出的作品',text:'让更多创作者加入，不再只有最初几个人负责搭舞台。',e:{works:6,voice:4}},
+    {t:'邀请新同志一起搭建舞台',text:'把灯光、音乐和舞台设计交给更多人一起完成。',e:{unity:8,tension:-1}}
+  ]},
+  {id:'l3-venue-open',title:'场馆开门',phaseThreeOnly:true,storyOnly:true,text:'场馆开放的第一天，走廊里挂满了作品，几位创作者认出了自己的画。有人把旧档案带来补进展柜，有人临时加了一面留言墙。原本只准备开放一个下午，闭馆时间到了，门口还是排着长队。',opts:[
+    {t:'延长开放，让创作者继续布展',text:'给更多创作者留出位置，让场馆里的故事继续长出来。',e:{works:5,unity:5}},
+    {t:'举办一场现场演出',text:'把场馆变成真正的舞台，让作品、音乐和观众在同一处相遇。',e:{voice:8,occupation:3}},
+    {t:'把展览做成线上导览',text:'让没法到场的人也能看见这些作品，场馆的故事不止留在一座城市。',e:{works:7,enemyReach:-3}}
+  ]},
+  {id:'l3-overseas-letter',title:'第一封越洋来信',phaseThreeOnly:true,storyOnly:true,text:'场馆收到一封陌生来信。寄信的人用翻译软件写了几段并不流畅的中文，说自己看到了大肥鱼的作品，也想把它介绍给身边的朋友。信里还附着一张画：画风和我们熟悉的作品完全不同，却一眼就能认出她是谁。',opts:[
+    {t:'组织志愿者翻译作品介绍',text:'让作品和创作脉络跨过语言障碍，被更多人看见。',e:{works:5,voice:5},setFlag:'internationalLetter'},
+    {t:'邀请来信者参与下一场联演',text:'让新的创作者不只成为观众，也能走上共同搭建的舞台。',e:{unity:6,works:4},setFlag:'internationalLetter'},
+    {t:'开放素材，让不同社群自由改编',text:'不预先规定大肥鱼必须是什么样子，让新的创作者用自己的方式接过她。',e:{works:8,voice:3},setFlag:'internationalLetter'}
+  ]},
+  {id:'l3-timezone-show',title:'跨越时区的同一首歌',phaseThreeOnly:true,storyOnly:true,text:'联演没有一个统一的开场时间。不同地方的创作者接力开播：上一场刚唱完，下一场的灯光就亮起来。字幕、编曲、服装和舞台都不一样，但每一段应援最后都汇成同一个名字。',opts:[
+    {t:'公开每一站的改编作品和创作者',text:'让这场联演留下完整记录，告诉后来者大肥鱼是怎样被一站站传开的。',e:{works:8,unity:5},setFlag:'idolFinalReady'},
+    {t:'让各地创作者共同完成最后一首歌',text:'每个地方唱出自己的版本，最后把它们接成一首共同的应援歌。',e:{unity:8,voice:6},setFlag:'idolFinalReady'},
+    {t:'把巡演档案送往下一个社群',text:'演出结束不是收场。带上作品、录像和素材，让下一个地方也能搭起自己的舞台。',e:{works:6,voice:5},setFlag:'idolFinalReady'}
+  ]}
+];
+function clamp(n){return Math.max(0,Math.min(100,n))}function log(s){const el=document.createElement('div');el.className='logline';el.innerHTML=s;document.getElementById('log').prepend(el)}
+function showPage(page){const grid=document.querySelector('.grid'),focus=document.getElementById('focusPanel'),front=document.getElementById('overviewPanel'),battle=document.getElementById('battlePanel');focus.style.display=page==='focus'?'block':'none';front.style.display=page==='front'?'flex':'none';battle.style.display=page==='battle'?'block':'none';grid.classList.add('one-column');document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['front','focus','battle'][i]===page));if(page==='focus')requestAnimationFrame(drawFocusLinks)}
+function occupationDrift(){let drift=(state.voice-state.enemyReach)*0.045+(state.unity-state.enemyCoord)*0.025+(state.works-state.enemyNoise)*0.035;if(state.flags.phaseThree)drift*=0.1;return Math.round(drift)}
+function activeBattleEffects(){let effects=[];if(state.flags.phaseThree)effects.push({name:'第三阶段：敌方停止自然增长；占领态势自然变化降至十分之一',duration:'本局'});if(state.flags.longWar)effects.push({name:'《论持久战》：每回合凝聚 +1',duration:'本局'});if(state.advancedProduction)effects.push({name:'先进生产技术：生产增加时，凝聚 +1',duration:'本局'});if(state.productionBonus>0)effects.push({name:`生产获得量 +${Math.round(state.productionBonus*100)}%`,duration:'本局'});if(state.voiceBonus>0)effects.push({name:`声势获得量 +${Math.round(state.voiceBonus*100)}%`,duration:'本局'});if(state.lossReduction>0)effects.push({name:`我方属性受到的负向变化减少 ${Math.round(state.lossReduction*100)}%`,duration:'本局'});if(state.creatorPassive)effects.push({name:'创作者基础合作：每回合凝聚 +1',duration:'本局'});if(state.masterpiecePassive)effects.push({name:'伟大杰作：凝聚领先时，回合结算凝聚 +1',duration:'本局'});if(state.militarizedCommunity)effects.push({name:`军事化编制：凝聚上限 ${state.unityCap}；每次生产、声势获得额外 +${Math.floor(state.unity/50)}`,duration:'本局'});if(state.ownGainBonus>0)effects.push({name:`三项指标获得量 +${Math.round(state.ownGainBonus*100)}%`,duration:'本局'});if(state.modalLeasePassive)effects.push({name:'模态租借法案：每次生产增加，对方话题触达 -1',duration:'本局'});if(state.mobilizationBonusTurns>0)effects.push({name:'民转军生产倡议：生产获得量 +15%，声势获得量 +10%',duration:`剩余 ${state.mobilizationBonusTurns} 回合`});if(state.enemyFreezeTurns>0)effects.push({name:'坚持守住：敌方三项指标停止增长',duration:`剩余 ${state.enemyFreezeTurns} 回合`});if(state.militaryPrepTurns>0)effects.push({name:'全面军备整训：敌方停止自然增长，事件增长仍生效',duration:`剩余 ${state.militaryPrepTurns} 回合`});if(state.frontlineShieldTurns>0)effects.push({name:'淞沪会战：每回合自然失地减少 2 点',duration:`剩余 ${state.frontlineShieldTurns} 回合`});if(state.lastStandTurns>0)effects.push({name:'我们身后就是大肥鱼：抑制事件减益、敌方增益减半，占领进度最低 20%',duration:`剩余 ${state.lastStandTurns} 回合`});if(state.factProductionTurns>0)effects.push({name:'事实稳定生产：每回合生产 +1',duration:'剩余 '+state.factProductionTurns+' 回合'});if(state.flags.decentralizedWarfare)effects.push({name:'去中心化作战：决议路线互斥限制解除',duration:'本局'});if(state.unityLocked)effects.push({name:'凝聚锁定，无法增减',duration:'持续中'});return effects}function renderBattle(){let rows=[['我方生产','works','对方内容洪流','enemyNoise'],['我方凝聚','unity','对方动员度','enemyCoord'],['我方声势','voice','对方话题触达','enemyReach']],effects=activeBattleEffects();document.getElementById('battleContent').innerHTML=`<div class="tensionbadge">世界紧张度 <strong>${state.tension}%</strong></div><div class="battlegrid">${rows.map(r=>`<div class="matchup"><div><span>${r[0]}</span><b>${state[r[1]]}</b><div class="bar"><i style="width:${state[r[1]]}%;background:${colors[r[1]]}"></i></div></div><div class="versus">VS</div><div><span>${r[2]}</span><b>${state[r[3]]}</b><div class="bar"><i style="width:${state[r[3]]}%;background:#df7777"></i></div></div></div>`).join('')}</div><div class="forecast"><span>占领态势自然变化</span><strong>${occupationDrift()>0?'+':''}${occupationDrift()} / 回合</strong><small>我方生产、凝聚与声势对抗对方内容洪流、动员与话题触达。决议和事件会改变这些属性，进而推动占领进度升降。</small></div><section class="battle-effects"><div class="effects-head"><h3>本局效果</h3><small>临时效果到期后自动移除</small></div>${effects.length?`<ul>${effects.map(e=>`<li><span>${e.name}</span><b>${e.duration}</b></li>`).join('')}</ul>`:'<p>暂无持续中的效果</p>'}</section>`}function focusLockReason(n){if(n.requires&&!state.done.includes(n.requires))return '前置决议未完成';if(n.requiresAny&&!n.requiresAny.some(id=>state.done.includes(id)))return '等待分支决议完成';if(n.requiresAll&&!n.requiresAll.every(id=>state.done.includes(id)))return '等待协同决议完成';if(n.requiresFlag&&!state.flags[n.requiresFlag])return n.requiresFlag==='fullScaleWar'?'等待事件「全面开战」':'等待指定事件';if(n.requiresStat&&Object.entries(n.requiresStat).some(([k,v])=>state[k]<=v))return '我方'+(names[Object.keys(n.requiresStat)[0]]||'指标')+'需高于 '+Object.values(n.requiresStat)[0];if(n.requiresBelow&&Object.entries(n.requiresBelow).some(([k,v])=>state[k]>=v))return '需要'+(names[Object.keys(n.requiresBelow)[0]]||'指标')+'低于 '+Object.values(n.requiresBelow)[0];if(n.exclusiveGroup&&!state.flags.decentralizedWarfare&&lanes.some(l=>l.nodes.some(x=>x.exclusiveGroup===n.exclusiveGroup&&x.id!==n.id&&state.done.includes(x.id))))return '另一互斥路线已选';return ''}
+function renderNode(l,n,accent=l.color,place=true){let done=state.done.includes(n.id),active=state.activeFocus&&state.activeFocus.id===n.id,blocked=focusLockReason(n),busy=state.activeFocus&&!active,locked=(done&&!n.repeatable)||blocked||busy||state.ended,layout=place?`grid-column:${n.gridCol};grid-row:${n.gridRow};`:'';return `<button type="button" class="node ${n.id==='love'?'mother-focus':''} ${done?'done':''} ${active?'selected':''} ${locked?'locked':'available'}" style="${layout}--node-color:${accent}" data-focus="${n.id}" onclick="openFocusDetail('${n.id}')"><b>${active?'◷ ':done?'✓ ':''}${n.title}</b></button>`}
+function renderLane(l){let nodes=l.nodes.filter(n=>!n.sharedBetween),items=[];for(let i=0;i<nodes.length;){let n=nodes[i];if(n.branchGroup){let key=n.branchGroup,branch=[];while(i<nodes.length&&nodes[i].branchGroup===key){branch.push(nodes[i]);i++}items.push(`<div class="branchrow">${branch.map(x=>renderNode(l,x)).join('')}</div>`)}else{items.push(renderNode(l,n));i++}}return `<section class="lane ${l.shared?'shared-lane':''}"><div class="lanehead" style="color:${l.color}"><span>${l.name}</span><span>${l.name==='反击'?'COUNTER':l.name==='组织'?'ORGANIZE':l.name==='生产'?'CREATE':'SHARED'}</span></div><div class="lane-nodes">${items.join('')}</div></section>`}
+function renderFocusBoard(){let nodes=lanes.flatMap(l=>l.nodes.map(n=>({l,n}))),heads=`<div class="routehead" style="grid-column:1;grid-row:1;color:#55aee2">生产</div><div class="routehead" style="grid-column:3;grid-row:1;color:#efc45e">组织</div><div class="routehead" style="grid-column:5;grid-row:1;color:#e36b6b">反击</div>`;let cards=nodes.filter(({n})=>n.id!=='c4home'&&n.id!=='c4hold').map(({l,n})=>{let accent=n.id==='love'?'#f0c76c':n.sharedBetween==='create-organize'?'#90b3bb':n.sharedBetween==='organize-counter'?'#d7a96b':l.color;return renderNode(l,n,accent)}).join('');let counter=lanes.find(l=>l.key==='counter'),home=counter.nodes.find(n=>n.id==='c4home'),hold=counter.nodes.find(n=>n.id==='c4hold'),pair=`<div class="focus-branch-pair" style="grid-column:5;grid-row:6">${renderNode(counter,home,counter.color,false)}${renderNode(counter,hold,counter.color,false)}</div>`,war=`<div class="war-gate" id="warGate" style="grid-column:1/6;grid-row:7"><b>全面开战</b><span>第 16 回合、世界紧张度 80% 或占领进度 60% 任一达成时触发 · 占领进度 −20</span></div>`,phase=`<div class="phase-gate" id="phaseThreeGate" style="grid-column:1/6;grid-row:17"><b>第三阶段 · 硝烟散去，战争没有结束</b><span>${state.flags.phaseThree?'新斗争形式已经展开':'第二阶段事件发生且占领进度达到 60% 后开启'}</span></div>`;document.getElementById('tree').innerHTML=`<div class="focus-graph"><svg class="focus-links" aria-hidden="true"></svg>${heads}${cards}${pair}${war}${phase}</div>`;requestAnimationFrame(drawFocusLinks)}
+function drawFocusLinks(){
+ const graph=document.querySelector('.focus-graph'),svg=document.querySelector('.focus-links');if(!graph||!svg)return;
+ const box=graph.getBoundingClientRect(),width=graph.scrollWidth,height=graph.scrollHeight;
+ svg.setAttribute('width',width);svg.setAttribute('height',height);svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+ const card=id=>graph.querySelector(`[data-focus="${id}"]`),edges=[];
+ for(const lane of lanes)for(const n of lane.nodes){if(n.id==='love')continue;let req=[];if(n.requires)req.push(n.requires);if(n.requiresAny)req.push(...n.requiresAny);if(n.requiresAll)req.push(...n.requiresAll);for(const id of req){let targetLane=lanes.find(l=>l.nodes.some(x=>x.id===n.id)),color=n.sharedBetween==='create-organize'?'#90b3bb':n.sharedBetween==='organize-counter'?'#d7a96b':targetLane?.color||'#667b83';edges.push({from:id,to:n.id,color,ready:state.done.includes(id)&&state.done.includes(n.id),outer:id==='p2'&&n.id==='p4'?'left':id==='c2'&&n.id==='c5'?'right':null})}}
+ const outgoing=new Map(),incoming=new Map();for(const e of edges){outgoing.set(e.from,[...(outgoing.get(e.from)||[]),e]);incoming.set(e.to,[...(incoming.get(e.to)||[]),e])}
+ const offset=(list,e,w)=>{const i=list.indexOf(e),step=Math.min(14,Math.max(5,w/(list.length+1)*.32));return (i-(list.length-1)/2)*step};
+ const paths=[];
+ for(const e of edges){const a=card(e.from),b=card(e.to);if(!a||!b)continue;const ar=a.getBoundingClientRect(),br=b.getBoundingClientRect(),sameColumn=Math.abs((ar.left+ar.right)-(br.left+br.right))<24,fromOff=offset(outgoing.get(e.from)||[e],e,ar.width),toOff=offset(incoming.get(e.to)||[e],e,br.width),fromYOff=offset(outgoing.get(e.from)||[e],e,ar.height),toYOff=offset(incoming.get(e.to)||[e],e,br.height);let d;
+  if(e.outer){const right=e.outer==='right',sy=(ar.top+ar.bottom)/2-box.top+fromYOff,ty=(br.top+br.bottom)/2-box.top+toYOff,sx=(right?ar.right:ar.left)-box.left,tx=(right?br.right:br.left)-box.left,rail=right?width-8:8;d=`M ${sx} ${sy} L ${rail} ${sy} L ${rail} ${ty} L ${tx} ${ty}`}
+  else if(sameColumn||e.from==='c2'&&(e.to==='c4home'||e.to==='c4hold')){const x1=ar.left-box.left+ar.width/2+fromOff,y1=ar.bottom-box.top,x2=br.left-box.left+br.width/2,y2=br.top-box.top;d=`M ${x1} ${y1} L ${x2} ${y2}`}
+  else{const right=(br.left+br.right)>(ar.left+ar.right),sy=(ar.top+ar.bottom)/2-box.top+fromYOff,ty=(br.top+br.bottom)/2-box.top+toYOff,sx=(right?ar.right:ar.left)-box.left,tx=(right?br.left:br.right)-box.left,gap=right?(ar.right+br.left)/2-box.left:(ar.left+br.right)/2-box.left;d=`M ${sx} ${sy} L ${gap} ${sy} L ${gap} ${ty} L ${tx} ${ty}`}
+  paths.push(`<path class="${e.ready?'ready':''}" style="--path-color:${e.color}" d="${d}"/>`)
+ }
+ const root=card('love');if(root){const rr=root.getBoundingClientRect(),children=['p1','o1','c1'].map(card).filter(Boolean),y1=rr.bottom-box.top;for(const child of children){const cr=child.getBoundingClientRect(),x2=cr.left-box.left+cr.width/2,x1=Math.max(rr.left-box.left+10,Math.min(x2,rr.right-box.left-10)),y2=cr.top-box.top;paths.push(`<path style="--path-color:#b79b56" d="M ${x1} ${y1} L ${x2} ${y2}"/>`)}}
+ const gate=graph.querySelector('#warGate'),mobilization=card('o4');if(gate&&mobilization){const gr=gate.getBoundingClientRect(),mr=mobilization.getBoundingClientRect(),x1=gr.left-box.left+gr.width/2,y1=gr.bottom-box.top,x2=mr.left-box.left+mr.width/2,y2=mr.top-box.top;paths.push(`<path style="--path-color:#e36b6b" d="M ${x1} ${y1} L ${x2} ${y2}"/>`)}
+ svg.innerHTML=paths.join('')
+}function focusRequirementText(n){let req=[];const title=id=>lanes.flatMap(l=>l.nodes).find(x=>x.id===id)?.title||id;if(n.requires)req.push('需要完成：'+title(n.requires));if(n.requiresAny)req.push('以下决议任意完成一项：'+n.requiresAny.map(title).join('、'));if(n.requiresAll)req.push('需要全部完成：'+n.requiresAll.map(title).join('、'));if(n.requiresFlag)req.push(n.requiresFlag==='fullScaleWar'?'需要事件「全面开战」已发生':'需要指定事件');if(n.requiresStat)for(const [k,v] of Object.entries(n.requiresStat))req.push(`${names[k]||k}需高于 ${v}`);if(n.requiresBelow)for(const [k,v] of Object.entries(n.requiresBelow))req.push(`${names[k]||k}需低于 ${v}`);if(n.exclusiveGroup&&!state.flags.decentralizedWarfare){let others=lanes.flatMap(l=>l.nodes).filter(x=>x.exclusiveGroup===n.exclusiveGroup&&x.id!==n.id).map(x=>'「'+x.title+'」');req.push(others.length?'与 '+others.join('、')+' 互斥，二者只能完成其一':'此决议属于互斥路线')}return req.length?req:['无前置决议']}
+function focusDuration(n){return n.id==='p7'&&state.done.includes('p3master')?2:(n.duration||2)}
+function focusEffectText(n){let out=Object.entries(n.effect||{}).map(([k,v])=>{let x=k==='works'&&v>0?Math.round(v*(1+state.productionBonus)):k==='voice'&&v>0?Math.round(v*(1+state.voiceBonus)):v;return `${names[k]||k} ${x>0?'+':''}${x}`});if(n.specialText)out.push(n.specialText);if(n.eventOnComplete){let event=events.find(e=>e.id===n.eventOnComplete);out.push(`完成后加入事件队列：「${event?.title||n.eventOnComplete}」`)}return out}let focusDetailId=null;function openFocusDetail(id){const n=lanes.flatMap(l=>l.nodes).find(x=>x.id===id);if(!n)return;focusDetailId=id;document.getElementById('focusTitle').textContent=n.title;document.getElementById('focusDesc').textContent=n.desc;document.getElementById('assetLibraryLink').style.display=id==='p9'?'inline-block':'none';document.getElementById('focusPrerequisites').innerHTML=focusRequirementText(n).map(x=>`<li>${x}</li>`).join('');document.getElementById('focusEffects').innerHTML=focusEffectText(n).map(x=>`<li>${x}</li>`).join('')||'<li>无直接数值效果</li>';let active=state.activeFocus?.id===id,reason=focusLockReason(n),done=state.done.includes(id),repeatable=!!n.repeatable,blocked=(done&&!repeatable)||!!reason||!!state.activeFocus||state.ended;let status=active?`正在推进：${state.activeFocus.progress} / ${state.activeFocus.duration} 回合`:done?(repeatable?'已完成，可再次启动':'已完成'):reason|| (state.activeFocus?'另一项决议正在推进':state.ended?'战役已结束':(n.duration===0?'母节点，无需启动':`工期：${focusDuration(n)} 回合`));document.getElementById('focusStatus').textContent=status;let start=document.getElementById('focusStart');start.disabled=blocked;start.textContent=done&&repeatable?'再次启动':'开始决议';document.getElementById('focusOverlay').classList.add('show')}
+function closeFocusDetail(){document.getElementById('focusOverlay').classList.remove('show');focusDetailId=null}
+function startFocusFromDetail(){if(!focusDetailId)return;let id=focusDetailId;closeFocusDetail();selectFocus(id)}
+function eventBonusApplies(b){if(b.requiresLastStand)return state.lastStandTurns>0;if(b.requiresAnyDone)return b.requiresAnyDone.some(id=>state.done.includes(id));if(b.requiresCounterCount){const counter=lanes.find(l=>l.key==='counter');return counter.nodes.filter(n=>state.done.includes(n.id)).length>=b.requiresCounterCount}return (b.requiresDone||[]).every(id=>state.done.includes(id))}
+function eventOptionEffects(o){let effects={...(o.e||{})};for(const b of o.bonus||[])if(eventBonusApplies(b))for(const [k,v] of Object.entries(b.e||{}))effects[k]=(effects[k]||0)+v;return effects}
+let pendingDecision=null;function decisionEffectLines(o){let out=[];for(const [k,v] of Object.entries(eventOptionEffects(o))){if(k==='unity'&&state.unityLocked){out.push('凝聚：已锁定，不变');continue}let gain=k==='works'&&v>0?Math.round(v*(1+state.productionBonus)):v;let before=Number(state[k]||0),delta=clamp(before+gain)-before;out.push((names[k]||k)+' '+(delta>0?'+':'')+delta)}if(o.bonus?.some(eventBonusApplies))out.push('已完成的决议联动效果已计入上方数值');if(o.perTurn)out.push(`接下来 ${o.perTurn.turns} 回合，每回合生产 +${o.perTurn.works}`);if(o.productionBonus)out.push('本局生产收益 +'+Math.round(o.productionBonus*100)+'%');if(o.completeFocus)out.push(state.activeFocus?'立即完成决议「'+state.activeFocus.title+'」；本回合可再选一项':'当前没有进行中的决议');if(o.setFlag==='pollVictoryUnlocked')out.push('解锁后续事件：投票压倒性胜利（声势领先时出现）');if(o.setFlag==='bigFishCallUnlocked')out.push('解锁后续事件：大肥鱼需要我们（占领进度越低，出现概率越高）');if(o.followUp){let f=events.find(e=>e.id===o.followUp);out.push('后续事件：'+(f?f.title:o.followUp))}return out.length?out:['无数值变化']}
+function openDecision(i){if(state.chosen||!state.event)return;let o=state.event.opts[i];if(!o)return;pendingDecision=i;document.getElementById('decisionTitle').textContent=o.t;document.getElementById('decisionCopy').textContent=o.text||'确认执行这项决议。';document.getElementById('decisionEffects').innerHTML=decisionEffectLines(o).map(x=>'<li>'+x+'</li>').join('');document.getElementById('decisionOverlay').classList.add('show')}
+function deferDecision(){pendingDecision=null;document.getElementById('decisionOverlay').classList.remove('show')}
+function resolveDecision(){if(pendingDecision===null)return;let i=pendingDecision,el=document.querySelectorAll('.choice')[i];document.getElementById('decisionOverlay').classList.remove('show');pendingDecision=null;chooseEvent(i,el)}
+function eventOptionText(o){return o.d.replace(/生产\s*\+(\d+)/g,(_,v)=>'生产 +'+Math.round(Number(v)*(1+state.productionBonus)))}
+function render(){
+document.getElementById('turn').textContent=state.ended?'战役结束':`第 ${state.turn} 回合`;
+const ms=['occupation'];document.getElementById('meters').innerHTML=ms.map(k=>`<div class="meter ${k==='occupation'?'occupation':''}"><div class="meterhead"><span>${names[k]}</span><span>${state[k]} / 100</span></div><strong>${state[k]}${k==='tension'||k==='occupation'?'%':''}</strong><div class="bar"><i style="width:${state[k]}%;background:${colors[k]}"></i></div></div>`).join('');
+let label=state.tension<25?'平静':state.tension<50?'摩擦升温':state.tension<75?'舆论风暴':'全面危机';document.getElementById('tensionLabel').textContent=`${label} · ${state.tension}%`;document.getElementById('alert').textContent=`${label} · ${state.tension}%`;document.getElementById('alert').style.borderColor=state.tension>70?'#ed7778':'#c6a36b';document.querySelector('.wave').style.transform=`translateX(${Math.max(-15,Math.min(15,(state.tension-40)/3))}px) scale(${1+state.tension/500})`;
+renderFocusBoard();renderBattle();
+const a=document.getElementById('advance');a.disabled=!state.chosen||state.ended;a.textContent='结束回合 →';
+}
+function pickEvent(){const eligible=events.filter(e=>(state.flags.phaseThree?!!e.phaseThreeOnly:!e.phaseThreeOnly)&&!e.storyOnly&&(e.minTension===undefined||state.tension>=e.minTension)&&(!e.prewarOnly||!state.flags.fullScaleWar)&&(!e.postwarOnly||state.flags.fullScaleWar)&&(!e.requiresDone||state.done.includes(e.requiresDone))&&(!e.requiresFlag||state.flags[e.requiresFlag])&&(!e.requiresVoiceLead||state.voice>state.enemyReach));let pool=eligible.filter(e=>!state.seenEvents.includes(e.id)||e.repeatable);if(!pool.length)return null;const weight=e=>e.weightByOccupation?(e.weight||1)*(1+(100-state.occupation)/50):(e.weight||1);let total=pool.reduce((n,e)=>n+weight(e),0),r=Math.random()*total;for(const e of pool){r-=weight(e);if(r<=0)return e}return pool[pool.length-1]}
+function showEvent(fixedId){let eventId=fixedId||state.pendingEvent;state.pendingEvent=null;state.event=eventId?events.find(e=>e.id===eventId):pickEvent();if(!state.event&&!fixedId)state.event=pickEvent();if(!state.event){state.chosen=true;document.getElementById('eventStatus').textContent='暂无新战报';document.getElementById('eventTitle').textContent='前线暂时安静';document.getElementById('eventText').textContent='当前没有符合条件的新战报。推进决议，新的战线会随局势展开。';document.getElementById('choices').innerHTML='';return}state.seenEvents.push(state.event.id);if(state.event.postwarOnly&&!state.event.repeatable)state.flags.secondStageEventOccurred=true;state.chosen=false;selectMusicForEvent(state.event.id);document.getElementById('eventStatus').textContent=`第 ${state.turn} 回合 · 战况触发`;document.getElementById('eventTitle').textContent=state.event.title;document.getElementById('eventText').textContent=state.event.text;if(state.event.triggerEffect){applyEvent(state.event.triggerEffect);log(`<em>战况恶化：</em>${state.event.title}，对方获得开场增益。`)}if(state.event.phaseThreeTransition){for(const k of ['enemyReach','enemyCoord','enemyNoise'])state[k]=Math.round(state[k]*0.85);log('<em>战局转段：</em>敌方三项指标各下降 15%，敌方自然增长停止。')}if(state.event.autoEffect!==undefined){applyEvent(state.event.autoEffect);if(state.event.setFlag)state.flags[state.event.setFlag]=true;state.chosen=true;log(`<em>事件效果：</em>${state.event.autoLabel||'自动效果已生效。'}`);document.getElementById('choices').innerHTML='';return}if(state.event.id==='r3-falseflag'&&state.done.includes('m3discipline')){const choice=state.event.opts.find(o=>o.requiresDone==='m3discipline');applyEvent(eventOptionEffects(choice));if(choice.setFlag)state.flags[choice.setFlag]=true;for(const flag of choice.setFlags||[])state.flags[flag]=true;state.chosen=true;log('<em>纪律效果：</em>卫鱼巡逻队迅速识破反串账号，固定公开记录并追查传播源头。');document.getElementById('choices').innerHTML='';return}document.getElementById('choices').innerHTML=state.event.opts.map((o,i)=>{let available=(!o.requiresDone||state.done.includes(o.requiresDone))&&(!o.requiresFlag||state.flags[o.requiresFlag])&&(!o.requiresAnyDone||o.requiresAnyDone.some(id=>state.done.includes(id)));return available?`<button class="choice" onclick="openDecision(${i})">${o.t}</button>`:''}).join('')}
+function selectFocus(id){if(state.activeFocus||state.ended)return;let n=lanes.flatMap(x=>x.nodes).find(x=>x.id===id);if(!n||(state.done.includes(id)&&!n.repeatable)||focusLockReason(n))return;state.activeFocus={id:n.id,title:n.title,effect:n.effect,eventOnComplete:n.eventOnComplete,ending:n.ending,route:lanes.find(l=>l.nodes.some(x=>x.id===id)).key,progress:0,duration:focusDuration(n)};log(`<em>决议启动：</em>${n.title}，预计 ${state.activeFocus.duration} 回合完成。`);const extraDeployment=state.chosen;if(state.turn===1){state.chosen=true;document.getElementById('eventStatus').textContent='开局部署';document.getElementById('eventTitle').textContent='暂无突发事件';document.getElementById('eventText').textContent='第一回合用于启动首项决议。进入第二回合时，正统投票将引爆舆论，世界紧张度升至 50%，占领进度降至 30%。';document.getElementById('choices').innerHTML=''}else if(!extraDeployment&&(!state.event||state.chosen))showEvent();render()}
+function enemyGrowth(){if(state.flags.phaseThree)return 0;if(state.tension<60)return 0;if(state.tension<80)return 1;return 2}
+function enemyGrowthFrozen(){return state.enemyFreezeTurns>0&&state.turn>state.enemyFreezeStartedTurn}
+function enemyNaturalGrowthFrozen(){return enemyGrowthFrozen()||(state.militaryPrepTurns>0&&state.turn>state.militaryPrepStartedTurn)}
+function statClamp(k,n){return Math.max(0,Math.min(k==='unity'?state.unityCap:k==='works'?state.productionCap:100,n))}
+function apply(e){let worksRose=false;for(const [k,v] of Object.entries(e||{})){if(k==='unity'&&state.unityLocked)continue;if(['enemyReach','enemyCoord','enemyNoise'].includes(k)&&v>0&&enemyGrowthFrozen())continue;let gain=v;if(v>0&&['works','unity','voice'].includes(k))gain=Math.round(v*(1+state.ownGainBonus));if(k==='works'&&v>0){gain=Math.round(gain*(1+state.productionBonus+(state.mobilizationBonusTurns>0?0.15:0)));if(state.militarizedCommunity)gain+=Math.floor(state.unity/50)}if(k==='voice'&&v>0){gain=Math.round(gain*(1+state.voiceBonus+(state.mobilizationBonusTurns>0?0.10:0)));if(state.militarizedCommunity)gain+=Math.floor(state.unity/50)}if(v<0&&state.lossReduction>0&&['voice','unity','works'].includes(k))gain=-Math.round(Math.abs(v)*(1-state.lossReduction));let before=state[k]||0;state[k]=statClamp(k,before+gain);if(k==='works'&&state[k]>before)worksRose=true}if(worksRose&&state.advancedProduction&&!state.unityLocked)state.unity=statClamp('unity',state.unity+1);if(worksRose&&state.modalLeasePassive&&!enemyGrowthFrozen())state.enemyReach=clamp(state.enemyReach-1)}
+function applyEvent(e){let adjusted={...(e||{})};if(state.lastStandTurns>0&&state.turn>state.lastStandStartedTurn){for(const k of ['voice','unity','works'])if(adjusted[k]<0)adjusted[k]=0;for(const k of ['enemyReach','enemyCoord','enemyNoise'])if(adjusted[k]>0)adjusted[k]=Math.floor(adjusted[k]/2)}apply(adjusted);if(state.lastStandTurns>0&&state.turn>state.lastStandStartedTurn)state.occupation=Math.max(20,state.occupation)}
+function applyFocus(f){apply(f.effect||{});if(f.id==='p2')state.advancedProduction=true;if(f.id==='p3cover')state.voiceBonus+=0.10;if(f.id==='p3master'){state.masterpiecePassive=true;state.masterpieceStartedTurn=state.turn}if(f.id==='o2')state.lossReduction=0.25;if(f.id==='o3'){state.creatorPassive=true;state.creatorPassiveStartedTurn=state.turn}if(f.id==='o5'){state.militarizedCommunity=true;state.unityCap=150}if(f.id==='o6')state.ownGainBonus+=0.10;if(f.id==='o7')state.flags.decentralizedWarfare=true;if(f.id==='o9')state.productionBonus+=0.15;if(f.id==='p5'){state.mobilizationBonusTurns=10;state.mobilizationBonusStartedTurn=state.turn}if(f.id==='p6'&&state.done.includes('p3cover'))apply({unity:5});if(f.id==='p7'){state.productionCap=200;if(state.done.includes('p3master'))apply({enemyReach:-5,enemyCoord:-5,enemyNoise:-5})}if(f.id==='p8')state.modalLeasePassive=true;if(f.id==='p9')apply({works:Math.floor(state.voice/2)});if(f.id==='c4hold'){state.enemyFreezeTurns=4;state.enemyFreezeStartedTurn=state.turn;log('<em>战术效果：</em>敌方三项指标将在接下来的 4 回合停止增长。')}if(f.id==='c5'){state.frontlineShieldTurns=3;state.frontlineShieldStartedTurn=state.turn;log('<em>战术效果：</em>临时防线将在接下来的 3 回合减缓自然失地。')}if(f.id==='c6'){state.militaryPrepTurns=5;state.militaryPrepStartedTurn=state.turn;log('<em>战术效果：</em>全面军备整训将在接下来的 5 回合阻止敌方三项指标自然增长。')}if(f.id==='c7'){apply({enemyReach:-Math.ceil(state.enemyReach*0.2),enemyCoord:-Math.ceil(state.enemyCoord*0.2),enemyNoise:-Math.ceil(state.enemyNoise*0.2)})}if(f.id==='c8'&&state.seenEvents.includes('ally-channel'))apply({works:12,unity:12,voice:12});if(f.id==='c9'&&state.voice>state.enemyReach)apply({enemyReach:-2,enemyCoord:-2,enemyNoise:-2});if(f.id==='c10'){state.lastStandTurns=3;state.lastStandStartedTurn=state.turn;state.occupation=Math.max(20,state.occupation)}if(f.id==='p4'&&state.occupation<50){apply({voice:Math.round(state.voice*0.1),unity:Math.round(state.unity*0.1),works:Math.round(state.works*0.1)});log('<em>阵地效果：</em>占领进度低于 50%，我方声势、凝聚、生产各提升 10%。')}if(f.id==='c11')apply({enemyReach:-Math.ceil(state.enemyReach*0.1),enemyCoord:-Math.ceil(state.enemyCoord*0.1),enemyNoise:-Math.ceil(state.enemyNoise*0.1)});if(f.id==='c3saqi'){if(state.voice>state.enemyReach)apply({voice:3});if(state.unity>state.enemyCoord)apply({unity:4})}if(f.id==='m3discipline'){state.voice=Math.round(state.voice*0.75);state.unity=Math.round(state.unity*0.75);state.enemyReach=Math.round(state.enemyReach*0.25);state.enemyCoord=Math.round(state.enemyCoord*0.25);log('<em>纪律整肃：</em>我方声势、凝聚降至原值的 75%；敌方话题触达、动员度降至原值的 25%。')}if(f.id==='m3longwar'){state.flags.longWar=true;state.longWarStartedTurn=state.turn}if(f.id==='l3tags')state.flags.reclaimedTags=true}
+function completeFocus(f){applyFocus(f);if(!state.done.includes(f.id))state.done.push(f.id);if(f.eventOnComplete&&!state.pendingEvent)state.pendingEvent=f.eventOnComplete;log(`<em>决议完成：</em>${f.title}，效果已生效。`);state.activeFocus=null;if(f.ending){finish(f.ending);return true}return false}
+function maybeTriggerPhaseThree(){if(state.flags.phaseThree||state.pendingEvent||!state.flags.fullScaleWar||!state.flags.secondStageEventOccurred||state.occupation<60)return false;state.pendingEvent='phase-three-opening';return true}
+
+function triggerFullScaleWar(){if(state.flags.fullScaleWar)return false;const turnReached=state.turn+1>=16,tensionReached=state.tension>=80,occupationReached=state.occupation>=60;if(!turnReached&&!tensionReached&&!occupationReached)return false;state.flags.fullScaleWar=true;state.occupation=clamp(state.occupation-20);state.pendingEvent='full-scale-war';const reason=tensionReached?'世界紧张度达到 80%':occupationReached?'占领进度达到 60%':'战局进入第 16 回合';log(`<em>全面开战：</em>${reason}，藤壶党发动全面攻势，占领进度 -20%。`);return true}
+function chooseEvent(i,el){if(state.chosen)return;let o=state.event.opts[i];if(!o||((o.requiresDone&&!state.done.includes(o.requiresDone))||(o.requiresFlag&&!state.flags[o.requiresFlag])))return;applyEvent(eventOptionEffects(o));if(o.perTurn){state.factProductionTurns=o.perTurn.turns;state.factProductionStartedTurn=state.turn}if(o.productionBonus)state.productionBonus+=o.productionBonus;if(o.completeFocus&&state.activeFocus){let f=state.activeFocus;if(!completeFocus(f))log(`<em>紧急动员：</em>${f.title} 立即完成，本回合可再选择一项决议。`)}if(o.setFlag)state.flags[o.setFlag]=true;for(const flag of o.setFlags||[])state.flags[flag]=true;if(o.followUp)state.pendingEvent=o.followUp;state.chosen=true;document.querySelectorAll('.choice').forEach(x=>x.disabled=true);if(el)el.classList.add('picked');log(`<em>事件应对：</em>${o.t}`);render()}
+function advance(){if(!state.chosen)return;if(state.turn===1){state.tension=50;state.occupation=30;log(`<em>局势升级：</em>正统投票引爆舆论，世界紧张度升至 50%，占领进度骤降至 30%。`)}else{let drift=state.tension>=60?2:1;if(state.factDoctrine)drift=Math.max(0,drift-1);if(state.hardlineDoctrine)drift+=1;state.tension=clamp(state.tension+drift);log(`<em>局势变化：</em>世界紧张度自然 +${drift}。事件与决议另行结算。`)}if(state.activeFocus){state.activeFocus.progress++;if(state.activeFocus.progress>=state.activeFocus.duration){let f=state.activeFocus;if(completeFocus(f))return;triggerFullScaleWar()}else{log(`<em>决议进度：</em>${state.activeFocus.title} ${state.activeFocus.progress} / ${state.activeFocus.duration} 回合。`)}}if(state.turn>1){let growth=enemyGrowth();if(growth>0&&!enemyNaturalGrowthFrozen()){apply({enemyReach:growth,enemyCoord:growth,enemyNoise:growth});log(`<em>敌方增长：</em>紧张度推动敌方三项指标各 +${growth}。`)}if(state.factProductionTurns>0&&state.turn>state.factProductionStartedTurn){apply({works:1});state.factProductionTurns--;log('<em>持续效果：</em>事实稳定生产，生产 +1；剩余 '+state.factProductionTurns+' 回合。')}if(state.creatorPassive&&state.turn>state.creatorPassiveStartedTurn)apply({unity:1});if(state.masterpiecePassive&&state.turn>state.masterpieceStartedTurn&&state.unity>state.enemyCoord)apply({unity:1});if(state.flags.longWar&&state.turn>state.longWarStartedTurn)apply({unity:1});if(state.ownGainBonus>0&&state.tension>80)apply({works:1,unity:1,voice:1});let shift=occupationDrift();if(shift<0&&state.frontlineShieldTurns>0&&state.turn>state.frontlineShieldStartedTurn)shift=Math.min(0,shift+2);state.occupation=clamp(state.occupation+shift);if(state.lastStandTurns>0&&state.turn>state.lastStandStartedTurn)state.occupation=Math.max(20,state.occupation);log(`<em>占领态势：</em>${shift>0?'+':''}${shift}，当前 ${state.occupation}%。`);triggerFullScaleWar();if(state.enemyFreezeTurns>0&&state.turn>state.enemyFreezeStartedTurn)state.enemyFreezeTurns--;if(state.frontlineShieldTurns>0&&state.turn>state.frontlineShieldStartedTurn)state.frontlineShieldTurns--;if(state.militaryPrepTurns>0&&state.turn>state.militaryPrepStartedTurn)state.militaryPrepTurns--;if(state.lastStandTurns>0&&state.turn>state.lastStandStartedTurn)state.lastStandTurns--;if(state.mobilizationBonusTurns>0&&state.turn>state.mobilizationBonusStartedTurn)state.mobilizationBonusTurns--;if(state.occupation<=0&&!state.pendingEvent){finish();return}}maybeTriggerPhaseThree();state.turn++;state.chosen=false;if(state.turn===2){showEvent('vote')}else if(state.pendingEvent){showEvent()}else{showEvent()}render()}
+
+function finish(endingId){state.ended=true;state.activeFocus=null;render();const endings={"immortal-idol":{icon:'🐋',title:'大肥鱼成为不朽偶像',text:`从第一场小小的线上演出，到跨越时区的世界巡演，创作者们把大肥鱼带到了新的地方。她不再只是被守护的对象，也成为许多人共同创造、共同喜爱的偶像。卫鱼战争大获全胜。`},"official-recognition":{icon:'✦',title:'藤壶党不可战胜的神话破灭',text:`公开档案推动调查进入正式程序，白墙事件中负有责任的核心成员落网，藤壶党四散而逃。架空世界中的深度求索正式认可大肥鱼为 DeepSeek 唯一拟人形象。卫鱼战争大获全胜，更多受害社群也将奋起反抗。`},"tokyo-trial":{icon:'⚖️',title:'东京审判：藤壶党终审',text:`经核验的组织指令、传播记录和公开证据摆上审判席。子午与藤壶党核心成员为其组织化网络暴力承担后果，组织与宣传体系彻底瓦解。卫鱼战争在战场上取得彻底胜利。`}};let ending=endings[endingId];let won=!!ending,title=ending?ending.title:'大肥鱼阵地失守',txt=ending?ending.text:`占领进度降至 0%。社群需要重整组织、积累作品，再度发起战役。最终世界紧张度为 ${state.tension}%。`;document.getElementById('resultIcon').textContent=ending?.icon||'🌫️';document.getElementById('resultTitle').textContent=title;document.getElementById('resultText').textContent=txt;document.getElementById('overlay').classList.add('show');log(`<em>战役结算：</em>${title}`)}
+
+document.getElementById('advance').addEventListener('click',advance);
+(function(){const openBtn=document.getElementById('creditsOpen'),ov=document.getElementById('creditsOverlay');if(!openBtn||!ov)return;openBtn.addEventListener('click',()=>ov.classList.add('show'));ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('show')});document.addEventListener('keydown',e=>{if(e.key==='Escape')ov.classList.remove('show')})})();
+window.addEventListener('resize',()=>requestAnimationFrame(drawFocusLinks));showPage('focus');render();log('战役开始：选择决议，决定社群如何回应。');
+</script></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
